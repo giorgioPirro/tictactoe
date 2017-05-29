@@ -1,4 +1,4 @@
-module Core.BoardTest exposing (boardTests)
+module BoardTest exposing (boardTests)
 
 import Test exposing (Test, todo)
 import Expect
