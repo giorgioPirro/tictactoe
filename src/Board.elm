@@ -1,4 +1,5 @@
-module Board exposing (Size(..), Mark(..), create, markCell, toList, toArray)
+module Board exposing (Size(..), Mark(..), Board, Position, create, markCell,
+                       toList, toArray)
 
 import Array exposing (Array)
 
