@@ -4,7 +4,7 @@ import Html exposing (Html, div, text, table, tr, td, p)
 import Html.Attributes exposing (..)
 import Html.Events
 
-import Board exposing (Board, Mark(..))
+import Board exposing (Board, Mark(..), Size(..))
 
 main =
   Html.program
@@ -30,14 +30,20 @@ type Msg = IrrelevantAtThisPoint
 
 view : Model -> Html Msg
 view model =
-    table [] [tr [] [renderCell (Just X), renderCell (Just X)], tr [] [renderCell (Just X), renderCell (Just X)]]
+    renderBoard (Board.create Standard)
 
 renderBoard : Board -> Html Msg
 renderBoard board =
     board
-       |> Board.toList
-       |> List.map renderCell
-       |> div [class "board"]
+        |> Board.rows
+        |> List.map renderRow
+        |> table [class "board"]
+
+renderRow : List (Maybe Mark) -> Html Msg
+renderRow row =
+    row
+        |> List.map renderCell
+        |> tr [class "row"]
 
 renderCell : Maybe Mark -> Html Msg
 renderCell mark =

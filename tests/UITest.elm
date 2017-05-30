@@ -20,7 +20,15 @@ uiTests =
                           |> Query.findAll [class "cell"]
                           |> Query.count (Expect.equal 9)
 
-            , test "showing empty cells with the appropriate class" <|
+            , test "arranging the cells in as many rows as there are in the board" <|
+                  \() ->
+                      Board.create Standard
+                          |> renderBoard
+                          |> Query.fromHtml
+                          |> Query.findAll [class "row"]
+                          |> Query.count (Expect.equal 3)
+
+            , test "displaying empty cells with the appropriate class" <|
                   \() ->
                       Board.create Standard
                           |> renderBoard
@@ -28,7 +36,7 @@ uiTests =
                           |> Query.findAll [class "cell"]
                           |> Query.each (Query.has [class "empty"])
 
-            , test "showing crosses' cells with the appropriate class" <|
+            , test "displaying crosses' cells with the appropriate class" <|
                   \() ->
                       Board.create Standard
                           |> Board.markCell (3, X)
@@ -38,7 +46,7 @@ uiTests =
                           |> Query.index 3
                           |> Query.has [class "crosses"]
 
-            , test "showing noughts' cells with the appropriate class" <|
+            , test "displaying noughts' cells with the appropriate class" <|
                   \() ->
                       Board.create Standard
                           |> Board.markCell (5, O)
