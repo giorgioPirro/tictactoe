@@ -4,7 +4,7 @@ import Html exposing (Html, div, text, table, tr, td, p)
 import Html.Attributes exposing (..)
 import Html.Events
 
-import Board exposing (Board)
+import Board exposing (Board, Mark(..))
 
 main =
   Html.program
@@ -30,11 +30,22 @@ type Msg = IrrelevantAtThisPoint
 
 view : Model -> Html Msg
 view model =
-    table [] [tr [] [cell, cell], tr [] [cell, cell]]
+    table [] [tr [] [renderCell (Just X), renderCell (Just X)], tr [] [renderCell (Just X), renderCell (Just X)]]
 
 renderBoard : Board -> Html Msg
 renderBoard board =
-  div [class "board"] [cell, cell, cell, cell, cell, cell, cell, cell, cell]
+    board
+       |> Board.toList
+       |> List.map renderCell
+       |> div [class "board"]
 
-cell : Html Msg
-cell = td [class "cell"] [text "I am cell"]
+renderCell : Maybe Mark -> Html Msg
+renderCell mark =
+    td [class (cellClass mark)] [text "I am cell"]
+
+cellClass : Maybe Mark -> String
+cellClass mark =
+    case mark of
+        (Just O) -> "cell noughts"
+        (Just X) -> "cell crosses"
+        Nothing  -> "cell empty"
