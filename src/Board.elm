@@ -1,5 +1,5 @@
 module Board exposing (Size(..), Mark(..), Board, Position, create, markCell,
-                       toList, toArray)
+                       rows, toList, toArray)
 
 import Array exposing (Array)
 
@@ -18,6 +18,27 @@ markCell : Move -> Board -> Board
 markCell (position, mark) (Board cells) =
     Array.set position (Just mark) cells
         |> Board
+
+rows : Board -> List (List (Maybe Mark))
+rows ((Board marks) as board) =
+    let
+        cells = Array.toList marks
+    in
+        chunkify (width board) cells
+
+chunkify : Int -> List a -> List (List a)
+chunkify chunkSize list =
+    case (List.take chunkSize list) of
+        [] -> []
+        chunk -> chunk :: (chunkify chunkSize (List.drop chunkSize list))
+
+width : Board -> Int
+width (Board marks) =
+    marks
+        |> Array.length
+        |> toFloat
+        |> sqrt
+        |> truncate
 
 toList : Board -> List (Maybe Mark)
 toList (Board marks) =
