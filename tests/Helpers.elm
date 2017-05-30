@@ -1,11 +1,8 @@
 module Helpers exposing (createNewGame)
 
 import Board exposing (Size(..), Mark)
-import Game exposing (Game)
+import Game exposing (Game, Player)
 
-createNewGame : Size -> Mark -> Game
-createNewGame size mark =
-    let
-        board = Board.create size
-    in
-        Game.create mark board
+createNewGame : Size -> (Player, Player) -> Game
+createNewGame size players =
+    Game.create players (Board.create size)

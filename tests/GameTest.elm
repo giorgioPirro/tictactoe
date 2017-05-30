@@ -13,33 +13,29 @@ gameTests =
     describe "A Game should"
         [ test "know whose turn it is at the start of a game" <|
               \() ->
-                  Board.create Standard
-                      |> Game.newCreate (Human X, Human O)
-                      |> Game.newWhoseTurn
+                  createNewGame Standard (Human X, Human O)
+                      |> Game.whoseTurn
                       |> Expect.equal (Just (Human X))
 
         , test "update the current player after a move is made (X starts)" <|
               \() ->
-                  Board.create Standard
-                      |> Game.newCreate (Human X, Human O)
+                  createNewGame Standard (Human X, Human O)
                       |> Game.makeMove 1
-                      |> Game.newWhoseTurn
+                      |> Game.whoseTurn
                       |> Expect.equal (Just (Human O))
 
         , todo "test whoseturn should return nothing when the game is over"
 
         , test "update the current player after a move is made (O starts)" <|
               \() ->
-                  Board.create Standard
-                      |> Game.newCreate (Human O, Human X)
+                  createNewGame Standard (Human O, Human X)
                       |> Game.makeMove 4
-                      |> Game.newWhoseTurn
+                      |> Game.whoseTurn
                       |> Expect.equal (Just (Human X))
 
         , test "update the board after a move is made (X starts)" <|
               \() ->
-                  Board.create Standard
-                      |> Game.newCreate (Human X, Human O)
+                  createNewGame Standard (Human X, Human O)
                       |> Game.makeMove 3
                       |> Game.getBoard
                       |> Board.toArray
@@ -48,8 +44,7 @@ gameTests =
 
         , test "update the board after a move is made (O starts)" <|
               \() ->
-                  Board.create Standard
-                      |> Game.newCreate (Human O, Human X)
+                  createNewGame Standard (Human O, Human X)
                       |> Game.makeMove 5
                       |> Game.getBoard
                       |> Board.toArray

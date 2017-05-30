@@ -1,50 +1,39 @@
-module Game exposing(Player(..), Game, create, newCreate, whoseTurn, newWhoseTurn, makeMove, getBoard)
+module Game exposing(Player(..), Game, create, whoseTurn, makeMove, getBoard)
 
 import Maybe
 
 import Board exposing(Mark(..), Board, Position)
 
 type Player = Human Mark | Computer Mark
-type alias Game = {currentPlayerMark: Mark, board: Board, players: (Player, Player)}
+type alias Game = {board: Board, players: (Player, Player)}
 
-create : Mark -> Board -> Game
-create mark board =
-    Game mark board (Human X, Human O)
+create : (Player, Player) -> Board -> Game
+create players board =
+    Game board players
 
-newCreate : (Player, Player) -> Board -> Game
-newCreate players board =
-    Game X board players
-
-whoseTurn : Game -> Mark
-whoseTurn {currentPlayerMark} =
-    currentPlayerMark
-
-newWhoseTurn : Game -> Maybe Player
-newWhoseTurn {players} =
+whoseTurn : Game -> Maybe Player
+whoseTurn {players} =
     (Just (Tuple.first players))
 
 makeMove : Position -> Game -> Game
-makeMove position {board, currentPlayerMark, players} =
+makeMove position {board, players} =
     let
-        mARRRKOfcurrentPlayer = extractMark(Tuple.first players)
-        newPlayerMark = switchMark currentPlayerMark
-        move = (position, mARRRKOfcurrentPlayer)
+        markOfCurrentPlayer = extractMark(Tuple.first players)
+        move = (position, markOfCurrentPlayer)
         newBoard = Board.markCell move board
     in
-        Game newPlayerMark newBoard (Tuple.second players, Tuple.first players)
+        Game newBoard (swapPlayers players)
 
 getBoard : Game -> Board
 getBoard {board} =
     board
-
-switchMark : Mark -> Mark
-switchMark mark =
-    case mark of
-        O -> X
-        X -> O
 
 extractMark : Player -> Mark
 extractMark player =
     case player of
         Human mark -> mark
         Computer mark -> mark
+
+swapPlayers : (Player, Player) -> (Player, Player)
+swapPlayers (playerOne, playerTwo) =
+    (playerTwo, playerOne)
