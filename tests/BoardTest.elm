@@ -5,7 +5,8 @@ import Expect
 import Array exposing (get)
 
 import Helpers exposing (createDrawBoardStandardSized, standardBoardXwinsHorizontally,
-                         standardBoardOwinsHorizontally)
+                         standardBoardOwinsHorizontally, standardBoardXwinsVertically,
+                         standardBoardOwinsVertically)
 
 import Board exposing (Size(..), Mark(..), create, toList, toArray)
 
@@ -82,15 +83,27 @@ boardTests =
                       |> Board.winningMark
                       |> Expect.equal Nothing
 
-        , test "find the winning mark when there is one (vertical X)" <|
+        , test "find the winning mark when there is one (horizontal X)" <|
               \() ->
                   standardBoardXwinsHorizontally
                       |> Board.winningMark
                       |> Expect.equal (Just X)
 
-        , test "find the winning mark when there is one (vertical O)" <|
+        , test "find the winning mark when there is one (horizontal O)" <|
               \() ->
                   standardBoardOwinsHorizontally
+                      |> Board.winningMark
+                      |> Expect.equal (Just O)
+
+        , test "find the winning mark when there is one (vertical X)" <|
+              \() ->
+                  standardBoardXwinsVertically
+                      |> Board.winningMark
+                      |> Expect.equal (Just X)
+
+        , test "find the winning mark when there is one (vertical O)" <|
+              \() ->
+                  standardBoardOwinsVertically
                       |> Board.winningMark
                       |> Expect.equal (Just O)
         ]

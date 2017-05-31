@@ -4,7 +4,8 @@ module Board exposing (Size(..), Mark(..), Board, Position, create, markCell,
 import Array exposing (Array)
 import Set
 
-import Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual)
+import Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual,
+                                transpose)
 import Utilities.Maybe exposing (flatMaybe)
 
 type Size  = Standard
@@ -29,6 +30,10 @@ rows ((Board marks) as board) =
         cells = Array.toList marks
     in
         chunkify (width board) cells
+
+columns : Board -> List (List (Maybe Mark))
+columns board =
+    transpose (rows board)
 
 chunkify : Int -> List a -> List (List a)
 chunkify chunkSize list =
@@ -60,7 +65,7 @@ lineHasEmptyCell cells =
 
 allLines : Board -> List (List (Maybe Mark))
 allLines board =
-    rows board
+    rows board ++ columns board
 
 width : Board -> Int
 width (Board marks) =
