@@ -5,13 +5,13 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
 import Board exposing (Board, Mark(..), Size(..), Position, Cell)
-import Game exposing (Status(..), Player(..))
+import Game exposing (Status(..), Player(..), Game)
 
 main =
   Html.program
-    { init = (0, Cmd.none)
+    { init = ((Game.create ((Human X),(Human O)) (Board.create Standard)), Cmd.none)
     , view = view
-    , update = \msg model -> (0, Cmd.none)
+    , update = update
     , subscriptions = always Sub.none
     }
 
@@ -19,23 +19,29 @@ main =
 -- MODEL
 
 
-type alias Model = Int
+type alias Model = Game
 
 
 -- UPDATE
 
 type Msg = HumanMove Position
 
+update : Msg -> Model -> (Model, Cmd Msg)
+update msg game =
+    case msg of
+        HumanMove position ->
+            ((Game.makeMove position game), Cmd.none)
+
 
 -- VIEW
 
 type alias Index = Int
 
-view : Model -> Html Msg
-view model =
-    renderBoard Ongoing (Human X) (Board.create Standard)
+view : Game -> Html Msg
+view game =
+    renderBoard (Game.status game) (Game.whoseTurn game) (Game.getBoard game)
 
-renderBoard : Status -> Player -> Board -> Html Msg
+renderBoard : Status -> Maybe Player -> Board -> Html Msg
 renderBoard status currentPlayer board =
     board
         |> Board.rowsWithPositions
@@ -50,7 +56,7 @@ renderRow row =
 
 renderCell : (Position, Cell) -> Html Msg
 renderCell (position, cell) =
-    td [class (cellClass cell), (clickEvent position cell) ] [text "I am cell"]
+    td [class (cellClass cell), (clickEvent position cell) ] []
 
 clickEvent : Position -> Cell -> Attribute Msg
 clickEvent position cell =

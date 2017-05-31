@@ -22,7 +22,7 @@ defaultBoardRenderingTests =
             [ fuzz randomGameStatus "displaying as many cells as there are in the board" <|
                   \status->
                       Board.create Standard
-                          |> renderBoard status (Human X)
+                          |> renderBoard status (Just (Human X))
                           |> Query.fromHtml
                           |> Query.findAll [class "cell"]
                           |> Query.count (Expect.equal 9)
@@ -30,7 +30,7 @@ defaultBoardRenderingTests =
             , fuzz randomGameStatus "arranging the cells in as many rows as there are in the board" <|
                   \status ->
                       Board.create Standard
-                          |> renderBoard status (Human X)
+                          |> renderBoard status (Just (Human X))
                           |> Query.fromHtml
                           |> Query.findAll [class "row"]
                           |> Query.count (Expect.equal 3)
@@ -38,7 +38,7 @@ defaultBoardRenderingTests =
             , fuzz randomGameStatus "displaying empty cells with the appropriate class" <|
                   \status ->
                       Board.create Standard
-                          |> renderBoard status (Human X)
+                          |> renderBoard status (Just (Human X))
                           |> Query.fromHtml
                           |> Query.findAll [class "cell"]
                           |> Query.each (Query.has [class "empty"])
@@ -47,7 +47,7 @@ defaultBoardRenderingTests =
                   \status ->
                       Board.create Standard
                           |> Board.markCell (3, X)
-                          |> renderBoard status (Human X)
+                          |> renderBoard status (Just (Human X))
                           |> Query.fromHtml
                           |> Query.findAll [class "cell"]
                           |> Query.index 3
@@ -60,7 +60,7 @@ defaultBoardRenderingTests =
                     in
                       Board.create Standard
                           |> Board.markCell (5, O)
-                          |> renderBoard status (Human X)
+                          |> renderBoard status (Just (Human X))
                           |> Query.fromHtml
                           |> Query.findAll [class "cell"]
                           |> Query.index 5
@@ -75,7 +75,7 @@ inPlayBoardRenderingTests =
             [ fuzz2 (intRange 0 2) (intRange 0 2) "with the appropriate commands" <|
                   \row column->
                       Board.create Standard
-                          |> renderBoard Ongoing (Human X)
+                          |> renderBoard Ongoing (Just (Human X))
                           |> Query.fromHtml
                           |> Query.findAll [class "row"]
                           |> Query.index row
