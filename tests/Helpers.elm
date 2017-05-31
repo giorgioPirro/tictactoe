@@ -1,6 +1,8 @@
 module Helpers exposing (createNewGame, createTieGameStandardSizedBoard,
                          createDrawBoardStandardSized, standardBoardXwinsHorizontally,
-                         standardBoardOwinsHorizontally)
+                         standardBoardOwinsHorizontally, standardBoardXwinsVertically,
+                         standardBoardOwinsVertically, standardBoardXwinsDownDiagonal,
+                         standardBoardOwinsUpDiagonal)
 
 import Board exposing (Size(..), Mark(..), Board)
 import Game exposing (Game, Player(..))
@@ -42,5 +44,33 @@ standardBoardOwinsHorizontally : Board
 standardBoardOwinsHorizontally =
     let
         moves = [(6, O), (0, X), (7, O), (1, X), (8, O)]
+    in
+        addMovesToBoard moves (Board.create Standard)
+
+standardBoardXwinsVertically : Board
+standardBoardXwinsVertically =
+    let
+        moves = [(0, X), (1, O), (3, X), (2, O), (6, X)]
+    in
+        addMovesToBoard moves (Board.create Standard)
+
+standardBoardOwinsVertically : Board
+standardBoardOwinsVertically =
+    let
+        moves = [(1, O), (0, X), (4, O), (3, X), (7, O)]
+    in
+        addMovesToBoard moves (Board.create Standard)
+
+standardBoardXwinsDownDiagonal : Board
+standardBoardXwinsDownDiagonal =
+    let
+        moves = [(0, X), (1, O), (4, X), (5, O), (8, X)]
+    in
+        addMovesToBoard moves (Board.create Standard)
+
+standardBoardOwinsUpDiagonal : Board
+standardBoardOwinsUpDiagonal =
+    let
+        moves = [(6, O), (0, X), (4, O), (5, X), (2, O), (8, X)]
     in
         addMovesToBoard moves (Board.create Standard)

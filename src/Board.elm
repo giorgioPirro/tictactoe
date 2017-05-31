@@ -5,7 +5,7 @@ import Array exposing (Array)
 import Set
 
 import Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual,
-                                transpose)
+                                transpose, getAt)
 import Utilities.Maybe exposing (flatMaybe)
 
 type Size  = Standard
@@ -23,17 +23,6 @@ markCell : Move -> Board -> Board
 markCell (position, mark) (Board cells) =
     Array.set position (Just mark) cells
         |> Board
-
-rows : Board -> List (List (Maybe Mark))
-rows ((Board marks) as board) =
-    let
-        cells = Array.toList marks
-    in
-        chunkify (width board) cells
-
-columns : Board -> List (List (Maybe Mark))
-columns board =
-    transpose (rows board)
 
 chunkify : Int -> List a -> List (List a)
 chunkify chunkSize list =
@@ -65,7 +54,30 @@ lineHasEmptyCell cells =
 
 allLines : Board -> List (List (Maybe Mark))
 allLines board =
-    rows board ++ columns board
+    rows board ++ columns board ++ diagonals board
+
+rows : Board -> List (List (Maybe Mark))
+rows ((Board marks) as board) =
+    let
+        cells = Array.toList marks
+    in
+        chunkify (width board) cells
+
+columns : Board -> List (List (Maybe Mark))
+columns board =
+    transpose (rows board)
+
+diagonals : Board -> List (List (Maybe Mark))
+diagonals board =
+    let
+        reversedRows = List.reverse (rows board)
+    in
+        [downDiagonal (rows board), downDiagonal (reversedRows)]
+
+downDiagonal : List (List (Maybe Mark)) -> List (Maybe Mark)
+downDiagonal rows =
+    List.indexedMap (,) rows
+        |> List.filterMap (\(index, row) -> (getAt row index))
 
 width : Board -> Int
 width (Board marks) =
