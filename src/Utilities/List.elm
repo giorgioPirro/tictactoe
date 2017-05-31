@@ -1,5 +1,5 @@
 module Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual,
-                                transpose)
+                                transpose, getAt)
 
 removeWhen : (a -> Bool) -> List a -> List a
 removeWhen predicate list =
@@ -31,12 +31,13 @@ transpose : List (List a) -> List (List a)
 transpose list =
     doTranspose [] list
 
-
 doTranspose : List (List a) -> List (List a) -> List (List a)
 doTranspose accumulator remainingLines =
     case remainingLines of
         [] ->
             accumulator
+        []::linesLeft ->
+            doTranspose accumulator linesLeft
         linesLeft ->
             doTranspose
                 (accumulator ++ (getAllHeads linesLeft))
@@ -49,3 +50,7 @@ getAllHeads blah =
 getAllTails : List (List a) -> List (List a)
 getAllTails blah =
     (List.filterMap List.tail blah)
+
+getAt : List a -> Int -> Maybe a
+getAt xs idx = List.head <| List.drop idx xs
+
