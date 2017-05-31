@@ -3,14 +3,17 @@ module UITest exposing (defaultBoardRenderingTests, inPlayBoardRenderingTests)
 import Test exposing (Test, describe, test, todo, fuzz)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (text, class)
+import Test.Html.Events as Events exposing (Event(..))
 import Expect
 import Random.Pcg
 import Fuzz
 import Shrink
 
 import Board exposing (Size(..), Mark(..))
-import Game exposing (Status(..))
-import Main exposing (renderBoard)
+import Game exposing (Status(..), Player(..))
+import Main exposing (Msg(..), renderBoard)
+
+type Msg = Ciao
 
 defaultBoardRenderingTests : Test
 defaultBoardRenderingTests =
@@ -19,7 +22,7 @@ defaultBoardRenderingTests =
             [ fuzz randomGameStatus "displaying as many cells as there are in the board" <|
                   \status->
                       Board.create Standard
-                          |> renderBoard status
+                          |> renderBoard status (Human X)
                           |> Query.fromHtml
                           |> Query.findAll [class "cell"]
                           |> Query.count (Expect.equal 9)
@@ -27,7 +30,7 @@ defaultBoardRenderingTests =
             , fuzz randomGameStatus "arranging the cells in as many rows as there are in the board" <|
                   \status ->
                       Board.create Standard
-                          |> renderBoard status
+                          |> renderBoard status (Human X)
                           |> Query.fromHtml
                           |> Query.findAll [class "row"]
                           |> Query.count (Expect.equal 3)
@@ -35,7 +38,7 @@ defaultBoardRenderingTests =
             , fuzz randomGameStatus "displaying empty cells with the appropriate class" <|
                   \status ->
                       Board.create Standard
-                          |> renderBoard status
+                          |> renderBoard status (Human X)
                           |> Query.fromHtml
                           |> Query.findAll [class "cell"]
                           |> Query.each (Query.has [class "empty"])
@@ -44,7 +47,7 @@ defaultBoardRenderingTests =
                   \status ->
                       Board.create Standard
                           |> Board.markCell (3, X)
-                          |> renderBoard status
+                          |> renderBoard status (Human X)
                           |> Query.fromHtml
                           |> Query.findAll [class "cell"]
                           |> Query.index 3
@@ -54,7 +57,7 @@ defaultBoardRenderingTests =
                   \status ->
                       Board.create Standard
                           |> Board.markCell (5, O)
-                          |> renderBoard status
+                          |> renderBoard status (Human X)
                           |> Query.fromHtml
                           |> Query.findAll [class "cell"]
                           |> Query.index 5
@@ -64,9 +67,19 @@ defaultBoardRenderingTests =
 
 inPlayBoardRenderingTests : Test
 inPlayBoardRenderingTests =
-    describe "When the game is Ongoing"
+    describe "When the game is Ongoing and Human is next"
         [ describe "the UI should render the board"
-            [ todo "with the appropriate commands"
+            [ test "with the appropriate commands" <|
+                  \() ->
+                      Board.create Standard
+                          |> renderBoard Ongoing (Human X)
+                          |> Query.fromHtml
+                          |> Query.findAll [class "row"]
+                          |> Query.index 0
+                          |> Query.findAll [class "cell"]
+                          |> Query.index 0
+                          |> Events.simulate Click
+                          |> Events.expectEvent (HumanMove 0)
             ]
         ]
 

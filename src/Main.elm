@@ -1,10 +1,11 @@
-module Main exposing (renderBoard)
+module Main exposing (Msg(..), renderBoard)
 
 import Html exposing (Html, div, text, table, tr, td, p)
 import Html.Attributes exposing (..)
-import Html.Events
+import Html.Events exposing (onClick)
 
-import Board exposing (Board, Mark(..), Size(..))
+import Board exposing (Board, Mark(..), Size(..), Position)
+import Game exposing (Status(..), Player(..))
 
 main =
   Html.program
@@ -23,17 +24,17 @@ type alias Model = Int
 
 -- UPDATE
 
-type Msg = IrrelevantAtThisPoint
+type Msg = HumanMove Position
 
 
 -- VIEW
 
 view : Model -> Html Msg
 view model =
-    renderBoard (Board.create Standard)
+    renderBoard Ongoing (Human X) (Board.create Standard)
 
-renderBoard : Board -> Html Msg
-renderBoard board =
+renderBoard : Status -> Player -> Board -> Html Msg
+renderBoard status currentPlayer board =
     board
         |> Board.rows
         |> List.map renderRow
@@ -47,7 +48,7 @@ renderRow row =
 
 renderCell : Maybe Mark -> Html Msg
 renderCell mark =
-    td [class (cellClass mark)] [text "I am cell"]
+    td [class (cellClass mark), (onClick (HumanMove 0))] [text "I am cell"]
 
 cellClass : Maybe Mark -> String
 cellClass mark =

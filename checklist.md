@@ -5,6 +5,8 @@
 [ ] - Annotate all private (not exposed) functions by prepending _ to their name
 [ ] - Better language for creating boards in helpers (something more graphical)
 [ ] - Separate Board into Board and Main?
+[ ] - Add fuzzy testing where possible/appropriate
+[ ] - Move custom fuzzer for Game status into helper
 
 
 
