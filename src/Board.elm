@@ -1,7 +1,11 @@
 module Board exposing (Size(..), Mark(..), Board, Position, create, markCell,
-                       rows, toList, toArray)
+                       rows, isFull, winningMark, toList, toArray)
 
 import Array exposing (Array)
+import Set
+
+import Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual)
+import Utilities.Maybe exposing (flatMaybe)
 
 type Size  = Standard
 type Mark  = X | O
@@ -31,6 +35,32 @@ chunkify chunkSize list =
     case (List.take chunkSize list) of
         [] -> []
         chunk -> chunk :: (chunkify chunkSize (List.drop chunkSize list))
+
+isFull : Board -> Bool
+isFull (Board marks) =
+    Array.toList marks
+        |> List.all (\mark -> mark /= Nothing)
+
+winningMark : Board -> Maybe Mark
+winningMark board =
+    let
+        winningLine =
+            board
+                |> allLines
+                |> removeWhen lineHasEmptyCell
+                |> findFirstWhere allItemsAreEqual
+    in
+        case winningLine of
+            Nothing -> Nothing
+            Just line -> flatMaybe (List.head line)
+
+lineHasEmptyCell : List (Maybe Mark) -> Bool
+lineHasEmptyCell cells =
+  List.any (\cell -> cell == Nothing)  cells
+
+allLines : Board -> List (List (Maybe Mark))
+allLines board =
+    rows board
 
 width : Board -> Int
 width (Board marks) =

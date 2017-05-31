@@ -1,5 +1,6 @@
 module Helpers exposing (createNewGame, createTieGameStandardSizedBoard,
-                         createDrawBoardStandardSized, standardBoardXwinsHorizontally)
+                         createDrawBoardStandardSized, standardBoardXwinsHorizontally,
+                         standardBoardOwinsHorizontally)
 
 import Board exposing (Size(..), Mark(..), Board)
 import Game exposing (Game, Player(..))
@@ -7,6 +8,11 @@ import Game exposing (Game, Player(..))
 createNewGame : Size -> (Player, Player) -> Game
 createNewGame size players =
     Game.create players (Board.create size)
+
+
+addMovesToBoard : List (Int, Mark) -> Board -> Board
+addMovesToBoard moves board =
+        List.foldl Board.markCell board moves
 
 createTieGameStandardSizedBoard : Game
 createTieGameStandardSizedBoard =
@@ -32,6 +38,9 @@ standardBoardXwinsHorizontally =
     in
         addMovesToBoard moves (Board.create Standard)
 
-addMovesToBoard : List (Int, Mark) -> Board -> Board
-addMovesToBoard moves board =
-        List.foldl Board.markCell board moves
+standardBoardOwinsHorizontally : Board
+standardBoardOwinsHorizontally =
+    let
+        moves = [(6, O), (0, X), (7, O), (1, X), (8, O)]
+    in
+        addMovesToBoard moves (Board.create Standard)
