@@ -13,5 +13,5 @@
 
 [ ] - use of language and compromises for Board.winningMark
 [ ] - would like to try work on a board that embeds players order to reduce the number of ways in which an invalid state can occur
-
+[ ] - explain internal representation of the board (performance vs ease of use)
 
