@@ -5,12 +5,15 @@ import Array exposing (Array)
 import Set
 
 import Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual,
-                                transpose, getAt)
+                                transpose, getAt, chunkify)
 import Utilities.Maybe exposing (flatMaybe)
 
 type Size  = Standard
+
 type Mark  = X | O
-type Board = Board (Array (Maybe Mark))
+type alias Cell = (Maybe Mark)
+type Board = Board (Array Cell)
+type alias Line = List Cell
 type alias Position = Int
 type alias Move = (Position, Mark)
 
@@ -23,12 +26,6 @@ markCell : Move -> Board -> Board
 markCell (position, mark) (Board cells) =
     Array.set position (Just mark) cells
         |> Board
-
-chunkify : Int -> List a -> List (List a)
-chunkify chunkSize list =
-    case (List.take chunkSize list) of
-        [] -> []
-        chunk -> chunk :: (chunkify chunkSize (List.drop chunkSize list))
 
 isFull : Board -> Bool
 isFull (Board marks) =
@@ -48,33 +45,31 @@ winningMark board =
             Nothing -> Nothing
             Just line -> flatMaybe (List.head line)
 
-lineHasEmptyCell : List (Maybe Mark) -> Bool
+lineHasEmptyCell : Line -> Bool
 lineHasEmptyCell cells =
   List.any (\cell -> cell == Nothing)  cells
 
-allLines : Board -> List (List (Maybe Mark))
+allLines : Board -> List Line
 allLines board =
     rows board ++ columns board ++ diagonals board
 
-rows : Board -> List (List (Maybe Mark))
-rows ((Board marks) as board) =
-    let
-        cells = Array.toList marks
-    in
-        chunkify (width board) cells
+rows : Board -> List Line
+rows board =
+    toList board
+        |> chunkify (width board)
 
-columns : Board -> List (List (Maybe Mark))
+columns : Board -> List Line
 columns board =
     transpose (rows board)
 
-diagonals : Board -> List (List (Maybe Mark))
+diagonals : Board -> List Line
 diagonals board =
     let
         reversedRows = List.reverse (rows board)
     in
         [downDiagonal (rows board), downDiagonal (reversedRows)]
 
-downDiagonal : List (List (Maybe Mark)) -> List (Maybe Mark)
+downDiagonal : List Line -> Line
 downDiagonal rows =
     List.indexedMap (,) rows
         |> List.filterMap (\(index, row) -> (getAt row index))
@@ -87,10 +82,10 @@ width (Board marks) =
         |> sqrt
         |> truncate
 
-toList : Board -> List (Maybe Mark)
+toList : Board -> List Cell
 toList (Board marks) =
     Array.toList marks
 
-toArray : Board -> Array (Maybe Mark)
+toArray : Board -> Array Cell
 toArray (Board marks) =
     marks
