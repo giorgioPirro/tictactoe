@@ -14,8 +14,12 @@ create players board =
     Game board players
 
 whoseTurn : Game -> Maybe Player
-whoseTurn {players} =
-    (Just (Tuple.first players))
+whoseTurn ({players} as game) =
+    case (status game) of
+        Ongoing ->
+            (Just (Tuple.first players))
+        _ ->
+            Nothing
 
 makeMove : Position -> Game -> Game
 makeMove position {board, players} =

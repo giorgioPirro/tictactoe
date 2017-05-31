@@ -25,7 +25,11 @@ gameTests =
                       |> Game.whoseTurn
                       |> Expect.equal (Just (Human O))
 
-        , todo "test whoseturn should return nothing when the game is over"
+        , test "know that it is not anyone's turn when a game is over" <|
+              \() ->
+                  createTieGameStandardSizedBoard
+                      |> Game.whoseTurn
+                      |> Expect.equal Nothing
 
         , test "update the current player after a move is made (O starts)" <|
               \() ->
