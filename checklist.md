@@ -3,10 +3,7 @@
 [ ] - Remove Board.toArray (or maybe think about the mashup of data structures around Board)
 [ ] - Add tests for Utils functions?
 [ ] - Annotate all private (not exposed) functions by prepending _ to their name
-
-
-
-
+[ ] - Better language for creating boards in helpers (something more graphical)
 
 
 
