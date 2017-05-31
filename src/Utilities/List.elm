@@ -1,5 +1,5 @@
 module Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual,
-                                transpose, getAt)
+                                transpose, getAt, chunkify)
 
 removeWhen : (a -> Bool) -> List a -> List a
 removeWhen predicate list =
@@ -53,4 +53,10 @@ getAllTails blah =
 
 getAt : List a -> Int -> Maybe a
 getAt xs idx = List.head <| List.drop idx xs
+
+chunkify : Int -> List a -> List (List a)
+chunkify chunkSize list =
+    case (List.take chunkSize list) of
+        [] -> []
+        chunk -> chunk :: (chunkify chunkSize (List.drop chunkSize list))
 
