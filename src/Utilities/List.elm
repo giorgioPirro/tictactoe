@@ -1,4 +1,5 @@
-module Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual)
+module Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual,
+                                transpose)
 
 removeWhen : (a -> Bool) -> List a -> List a
 removeWhen predicate list =
@@ -25,3 +26,26 @@ allItemsAreEqual items =
                 Just item ->
                    if (first == item) then (allItemsAreEqual rest)
                    else False
+
+transpose : List (List a) -> List (List a)
+transpose list =
+    doTranspose [] list
+
+
+doTranspose : List (List a) -> List (List a) -> List (List a)
+doTranspose accumulator remainingLines =
+    case remainingLines of
+        [] ->
+            accumulator
+        linesLeft ->
+            doTranspose
+                (accumulator ++ (getAllHeads linesLeft))
+                (getAllTails linesLeft)
+
+getAllHeads : List (List a) -> List (List a)
+getAllHeads blah =
+    [(List.filterMap List.head blah)]
+
+getAllTails : List (List a) -> List (List a)
+getAllTails blah =
+    (List.filterMap List.tail blah)
