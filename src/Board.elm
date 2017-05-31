@@ -1,5 +1,5 @@
-module Board exposing (Size(..), Mark(..), Board, Position, create, markCell,
-                       rows, isFull, winningMark, toList, toArray)
+module Board exposing (Size(..), Mark(..), Cell, Board, Position, create, markCell,
+                       rows, rowsWithPositions, isFull, winningMark, toList, toArray)
 
 import Array exposing (Array)
 import Set
@@ -56,6 +56,12 @@ allLines board =
 rows : Board -> List Line
 rows board =
     toList board
+        |> chunkify (width board)
+
+rowsWithPositions : Board -> List (List (Position,Cell))
+rowsWithPositions board =
+    toList board
+        |> List.indexedMap (,)
         |> chunkify (width board)
 
 columns : Board -> List Line
