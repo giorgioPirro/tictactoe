@@ -1,4 +1,5 @@
-module Game exposing(Player(..), Game, create, whoseTurn, makeMove, getBoard)
+module Game exposing(Player(..), Game, Status(..), create, whoseTurn, makeMove,
+                     getBoard, status)
 
 import Maybe
 
@@ -6,6 +7,7 @@ import Board exposing(Mark(..), Board, Position)
 
 type Player = Human Mark | Computer Mark
 type alias Game = {board: Board, players: (Player, Player)}
+type Status = Ongoing | Tie | Win Mark
 
 create : (Player, Player) -> Board -> Game
 create players board =
@@ -37,3 +39,14 @@ extractMark player =
 swapPlayers : (Player, Player) -> (Player, Player)
 swapPlayers (playerOne, playerTwo) =
     (playerTwo, playerOne)
+
+status : Game -> Status
+status {board} =
+    case (Board.winningMark board) of
+        Just mark ->
+            Win mark
+        Nothing ->
+            if (Board.isFull board) then
+                Tie
+            else
+                Ongoing

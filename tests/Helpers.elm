@@ -1,4 +1,5 @@
 module Helpers exposing (createNewGame, createTieGameStandardSizedBoard,
+                         createXwinGameStandardSizedBoard, createOwinGameStandardSizedBoard,
                          createDrawBoardStandardSized, standardBoardXwinsHorizontally,
                          standardBoardOwinsHorizontally, standardBoardXwinsVertically,
                          standardBoardOwinsVertically, standardBoardXwinsDownDiagonal,
@@ -21,6 +22,22 @@ createTieGameStandardSizedBoard =
     let
         newGame = Game.create (Human X, Human O) (Board.create Standard)
         moves = [1, 0, 4, 2, 5, 3, 6, 7, 8]
+    in
+        List.foldl Game.makeMove newGame moves
+
+createXwinGameStandardSizedBoard : Game
+createXwinGameStandardSizedBoard =
+    let
+        newGame = Game.create (Human X, Human O) (Board.create Standard)
+        moves = [0, 3, 1, 4, 2]
+    in
+        List.foldl Game.makeMove newGame moves
+
+createOwinGameStandardSizedBoard : Game
+createOwinGameStandardSizedBoard =
+    let
+        newGame = Game.create (Human O, Human X) (Board.create Standard)
+        moves = [0, 3, 4, 5, 8]
     in
         List.foldl Game.makeMove newGame moves
 

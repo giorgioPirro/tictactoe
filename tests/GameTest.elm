@@ -4,8 +4,9 @@ import Test exposing (Test, describe, test, todo)
 import Expect
 import Array
 
-import Helpers exposing (createNewGame)
-import Game exposing (Player(..))
+import Helpers exposing (createNewGame, createTieGameStandardSizedBoard,
+                         createXwinGameStandardSizedBoard, createOwinGameStandardSizedBoard)
+import Game exposing (Player(..), Status(..))
 import Board exposing (Size(..), Mark(..))
 
 gameTests : Test
@@ -50,4 +51,28 @@ gameTests =
                       |> Board.toArray
                       |> Array.get 5
                       |> Expect.equal (Just (Just O))
+
+        , test "know that a game is ongoing at the start" <|
+              \() ->
+                  createNewGame Standard (Human X, Human O)
+                      |> Game.status
+                      |> Expect.equal Ongoing
+
+        , test "know when a game is tied" <|
+              \() ->
+                  createTieGameStandardSizedBoard
+                      |> Game.status
+                      |> Expect.equal Tie
+
+        , test "know when X has won" <|
+              \() ->
+                  createXwinGameStandardSizedBoard
+                      |> Game.status
+                      |> Expect.equal (Win X)
+
+        , test "know when O has won" <|
+              \() ->
+                  createOwinGameStandardSizedBoard
+                      |> Game.status
+                      |> Expect.equal (Win O)
         ]
