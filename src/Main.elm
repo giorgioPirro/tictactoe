@@ -9,7 +9,7 @@ import Game exposing (Status(..), Player(..), Game)
 
 main =
   Html.program
-    { init = ((Game.create ((Human X),(Human O)) (Board.create Standard)), Cmd.none)
+    { init = init
     , view = view
     , update = update
     , subscriptions = always Sub.none
@@ -21,8 +21,13 @@ main =
 
 type alias Model = Game
 
+init : (Game, Cmd Msg)
+init =
+    ((Game.create ((Human X),(Human O)) (Board.create Standard)), Cmd.none)
+
 
 -- UPDATE
+
 
 type Msg = HumanMove Position
 
@@ -34,6 +39,7 @@ update msg game =
 
 
 -- VIEW
+
 
 type alias Index = Int
 
