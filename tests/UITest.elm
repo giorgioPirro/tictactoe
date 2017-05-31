@@ -1,12 +1,12 @@
 module UITest exposing (defaultBoardRenderingTests, inPlayBoardRenderingTests)
 
-import Test exposing (Test, describe, test, todo, fuzz)
+import Test exposing (Test, describe, test, todo, fuzz, fuzz2)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (text, class)
 import Test.Html.Events as Events exposing (Event(..))
 import Expect
 import Random.Pcg
-import Fuzz
+import Fuzz exposing (intRange)
 import Shrink
 
 import Board exposing (Size(..), Mark(..))
@@ -55,6 +55,9 @@ defaultBoardRenderingTests =
 
             , fuzz randomGameStatus "displaying noughts' cells with the appropriate class" <|
                   \status ->
+                    let
+                        a = Board.rowsWithPositions (Board.create Standard)
+                    in
                       Board.create Standard
                           |> Board.markCell (5, O)
                           |> renderBoard status (Human X)
@@ -69,21 +72,24 @@ inPlayBoardRenderingTests : Test
 inPlayBoardRenderingTests =
     describe "When the game is Ongoing and Human is next"
         [ describe "the UI should render the board"
-            [ test "with the appropriate commands" <|
-                  \() ->
+            [ fuzz2 (intRange 0 2) (intRange 0 2) "with the appropriate commands" <|
+                  \row column->
                       Board.create Standard
                           |> renderBoard Ongoing (Human X)
                           |> Query.fromHtml
                           |> Query.findAll [class "row"]
-                          |> Query.index 0
+                          |> Query.index row
                           |> Query.findAll [class "cell"]
-                          |> Query.index 0
+                          |> Query.index column
                           |> Events.simulate Click
-                          |> Events.expectEvent (HumanMove 0)
+                          |> Events.expectEvent (HumanMove (twoDtoOneDIndex 3 row column))
             ]
         ]
 
 
+twoDtoOneDIndex : Int -> Int -> Int -> Int
+twoDtoOneDIndex boardWidth row column =
+    (row * boardWidth) + column
 
 
 ----HELPER FUZZER

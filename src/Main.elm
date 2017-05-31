@@ -1,10 +1,10 @@
 module Main exposing (Msg(..), renderBoard)
 
-import Html exposing (Html, div, text, table, tr, td, p)
+import Html exposing (Html, Attribute, div, text, table, tr, td, p)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
-import Board exposing (Board, Mark(..), Size(..), Position)
+import Board exposing (Board, Mark(..), Size(..), Position, Cell)
 import Game exposing (Status(..), Player(..))
 
 main =
@@ -29,6 +29,8 @@ type Msg = HumanMove Position
 
 -- VIEW
 
+type alias Index = Int
+
 view : Model -> Html Msg
 view model =
     renderBoard Ongoing (Human X) (Board.create Standard)
@@ -36,23 +38,27 @@ view model =
 renderBoard : Status -> Player -> Board -> Html Msg
 renderBoard status currentPlayer board =
     board
-        |> Board.rows
+        |> Board.rowsWithPositions
         |> List.map renderRow
         |> table [class "board"]
 
-renderRow : List (Maybe Mark) -> Html Msg
+renderRow : List (Position, Cell) -> Html Msg
 renderRow row =
     row
         |> List.map renderCell
         |> tr [class "row"]
 
-renderCell : Maybe Mark -> Html Msg
-renderCell mark =
-    td [class (cellClass mark), (onClick (HumanMove 0))] [text "I am cell"]
+renderCell : (Position, Cell) -> Html Msg
+renderCell (position, cell) =
+    td [class (cellClass cell), (clickEvent position cell) ] [text "I am cell"]
 
-cellClass : Maybe Mark -> String
-cellClass mark =
-    case mark of
+clickEvent : Position -> Cell -> Attribute Msg
+clickEvent position cell =
+    onClick (HumanMove position)
+
+cellClass : Cell -> String
+cellClass cell =
+    case cell of
         (Just O) -> "cell noughts"
         (Just X) -> "cell crosses"
         Nothing  -> "cell empty"
