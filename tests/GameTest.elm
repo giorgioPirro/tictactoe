@@ -25,10 +25,30 @@ gameTests =
                       |> Game.whoseTurn
                       |> Expect.equal (Just (Human O))
 
+        , test "know whose turn it is next (X starts)" <|
+              \() ->
+                  createNewGame Standard (Human X, Human O)
+                      |> Game.makeMove 1
+                      |> Game.whoseTurnNext
+                      |> Expect.equal (Just (Human X))
+
+        , test "know whose turn it is next (O starts)" <|
+              \() ->
+                  createNewGame Standard (Human O, Human X)
+                      |> Game.makeMove 1
+                      |> Game.whoseTurnNext
+                      |> Expect.equal (Just (Human O))
+
         , test "know that it is not anyone's turn when a game is over" <|
               \() ->
                   createTieGameStandardSizedBoard
                       |> Game.whoseTurn
+                      |> Expect.equal Nothing
+
+        , test "know that it is not anyone's turn next when a game is over" <|
+              \() ->
+                  createTieGameStandardSizedBoard
+                      |> Game.whoseTurnNext
                       |> Expect.equal Nothing
 
         , test "update the current player after a move is made (O starts)" <|
@@ -37,7 +57,6 @@ gameTests =
                       |> Game.makeMove 4
                       |> Game.whoseTurn
                       |> Expect.equal (Just (Human X))
-
 
         , test "not update the current player if a move has alread been made (O starts)" <|
               \() ->
