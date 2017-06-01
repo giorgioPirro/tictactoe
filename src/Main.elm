@@ -1,4 +1,4 @@
-module Main exposing (Msg(..), renderBoard, renderGameStatus)
+module Main exposing (Msg(..), renderBoard, renderGameStatus, update)
 
 import Html exposing (Html, Attribute, div, text, table, tr, td, p)
 import Html.Attributes exposing (..)
@@ -19,11 +19,11 @@ main =
 -- MODEL
 
 
-type alias Model = Game
+type alias Model = {game: Game}
 
-init : (Game, Cmd Msg)
+init : (Model, Cmd Msg)
 init =
-    ((Game.create ((Human X),(Human O)) (Board.create Standard)), Cmd.none)
+    ({game = (Game.create ((Human X),(Human O)) (Board.create Standard))}, Cmd.none)
 
 
 -- UPDATE
@@ -32,10 +32,10 @@ init =
 type Msg = HumanMove Position
 
 update : Msg -> Model -> (Model, Cmd Msg)
-update msg game =
+update msg {game} =
     case msg of
         HumanMove position ->
-            ((Game.makeMove position game), Cmd.none)
+            ({game = (Game.makeMove position game)}, Cmd.none)
 
 
 -- VIEW
@@ -43,8 +43,8 @@ update msg game =
 
 type alias Index = Int
 
-view : Game -> Html Msg
-view game =
+view : Model -> Html Msg
+view {game} =
     div []
         [ renderBoard (Game.status game) (Game.whoseTurn game) (Game.getBoard game)
         , renderGameStatus (Game.status game)
