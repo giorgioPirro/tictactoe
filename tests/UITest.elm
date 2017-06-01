@@ -6,11 +6,10 @@ import Test.Html.Query as Query
 import Test.Html.Selector exposing (text, class)
 import Test.Html.Event as Event exposing (click)
 import Expect
-import Random.Pcg
 import Fuzz exposing (intRange)
-import Shrink
 
-import Helpers exposing (standardBoardXwinsHorizontally)
+import Helpers exposing (standardBoardXwinsHorizontally, randomGameStatus,
+                         randomGameOverStatus)
 
 import Board exposing (Size(..), Mark(..))
 import Game exposing (Status(..), Player(..))
@@ -126,34 +125,3 @@ gameOverBoardRenderingTests =
 twoDtoOneDIndex : Int -> Int -> Int -> Int
 twoDtoOneDIndex boardWidth row column =
     (row * boardWidth) + column
-
-----HELPER FUZZER
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
-intToStatus : Int -> Status
-intToStatus statusId =
-    case statusId of
-        0 -> Ongoing
-        1 -> Tie
-        2 -> Win X
-        _ -> Win O
-
-randomStatusGenerator : Random.Pcg.Generator Status
-randomStatusGenerator =
-   Random.Pcg.map intToStatus (Random.Pcg.int 0 3)
-
-randomGameOverStatusGenerator : Random.Pcg.Generator Status
-randomGameOverStatusGenerator =
-   Random.Pcg.map intToStatus (Random.Pcg.int 1 3)
-
-randomGameStatus : Fuzz.Fuzzer Status
-randomGameStatus =
-    Fuzz.custom randomStatusGenerator Shrink.noShrink
-
-randomGameOverStatus : Fuzz.Fuzzer Status
-randomGameOverStatus =
-    Fuzz.custom randomGameOverStatusGenerator Shrink.noShrink
-
-----HELPER FUZZER
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------

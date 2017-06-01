@@ -3,10 +3,15 @@ module Helpers exposing (createNewGame, createTieGameStandardSizedBoard,
                          createDrawBoardStandardSized, standardBoardXwinsHorizontally,
                          standardBoardOwinsHorizontally, standardBoardXwinsVertically,
                          standardBoardOwinsVertically, standardBoardXwinsDownDiagonal,
-                         standardBoardOwinsUpDiagonal)
+                         standardBoardOwinsUpDiagonal, randomGameStatus,
+                         randomGameOverStatus)
+
+import Random.Pcg
+import Fuzz
+import Shrink
 
 import Board exposing (Size(..), Mark(..), Board)
-import Game exposing (Game, Player(..))
+import Game exposing (Game, Player(..), Status(..))
 
 createNewGame : Size -> (Player, Player) -> Game
 createNewGame size players =
@@ -91,3 +96,23 @@ standardBoardOwinsUpDiagonal =
         moves = [(6, O), (0, X), (4, O), (5, X), (2, O), (8, X)]
     in
         addMovesToBoard moves (Board.create Standard)
+
+randomGameStatus : Fuzz.Fuzzer Status
+randomGameStatus =
+    Fuzz.custom (randomStatusGenerator 0 3) Shrink.noShrink
+
+randomGameOverStatus : Fuzz.Fuzzer Status
+randomGameOverStatus =
+    Fuzz.custom (randomStatusGenerator 1 3) Shrink.noShrink
+
+intToStatus : Int -> Status
+intToStatus statusId =
+    case statusId of
+        0 -> Ongoing
+        1 -> Tie
+        2 -> Win X
+        _ -> Win O
+
+randomStatusGenerator : Int -> Int -> Random.Pcg.Generator Status
+randomStatusGenerator startRange endRange =
+   Random.Pcg.map intToStatus (Random.Pcg.int startRange endRange)
