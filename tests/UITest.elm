@@ -1,6 +1,7 @@
-module UITest exposing (defaultBoardRenderingTests, inPlayBoardRenderingTests)
+module UITest exposing (defaultBoardRenderingTests, inPlayBoardRenderingTests,
+                        gameOverBoardRenderingTests)
 
-import Test exposing (Test, describe, test, todo, fuzz, fuzz2)
+import Test exposing (Test, describe, test, todo, fuzz, fuzz2, fuzz3)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (text, class)
 import Test.Html.Event as Event exposing (click)
@@ -8,6 +9,8 @@ import Expect
 import Random.Pcg
 import Fuzz exposing (intRange)
 import Shrink
+
+import Helpers exposing (standardBoardXwinsHorizontally)
 
 import Board exposing (Size(..), Mark(..))
 import Game exposing (Status(..), Player(..))
@@ -100,6 +103,25 @@ inPlayBoardRenderingTests =
             ]
         ]
 
+gameOverBoardRenderingTests : Test
+gameOverBoardRenderingTests =
+    describe "When the game is over"
+        [ describe "the UI should render the board"
+            [ fuzz3 randomGameOverStatus (intRange 0 2) (intRange 0 2) "without any move events" <|
+                \gameOverState row column ->
+                    standardBoardXwinsHorizontally
+                        |> renderBoard gameOverState Nothing
+                        |> Query.fromHtml
+                        |> Query.findAll [class "row"]
+                        |> Query.index row
+                        |> Query.findAll [class "cell"]
+                        |> Query.index column
+                        |> Event.simulate click
+                        |> Event.toResult
+                        |> Expect.notEqual (Ok (HumanMove (twoDtoOneDIndex 3 row column)))
+            ]
+        ]
+
 
 twoDtoOneDIndex : Int -> Int -> Int -> Int
 twoDtoOneDIndex boardWidth row column =
@@ -120,9 +142,18 @@ randomStatusGenerator : Random.Pcg.Generator Status
 randomStatusGenerator =
    Random.Pcg.map intToStatus (Random.Pcg.int 0 3)
 
+randomGameOverStatusGenerator : Random.Pcg.Generator Status
+randomGameOverStatusGenerator =
+   Random.Pcg.map intToStatus (Random.Pcg.int 1 3)
+
 randomGameStatus : Fuzz.Fuzzer Status
 randomGameStatus =
     Fuzz.custom randomStatusGenerator Shrink.noShrink
+
+randomGameOverStatus : Fuzz.Fuzzer Status
+randomGameOverStatus =
+    Fuzz.custom randomGameOverStatusGenerator Shrink.noShrink
+
 ----HELPER FUZZER
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------

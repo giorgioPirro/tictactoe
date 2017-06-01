@@ -51,26 +51,37 @@ renderBoard : Status -> Maybe Player -> Board -> Html Msg
 renderBoard status currentPlayer board =
     board
         |> Board.rowsWithPositions
-        |> List.map renderRow
+        |> List.map (renderRow status)
         |> table [class "board"]
 
-renderRow : List (Position, Cell) -> Html Msg
-renderRow row =
+isGameOngoing : Status -> Bool
+isGameOngoing status =
+    status == Ongoing
+
+renderRow : Status -> List (Position, Cell) -> Html Msg
+renderRow status row =
     row
-        |> List.map renderCell
+        |> List.map (renderCell status)
         |> tr [class "row"]
 
-renderCell : (Position, Cell) -> Html Msg
-renderCell indexedCell =
-        td (buildCellAttributes indexedCell) []
+renderCell : Status -> (Position, Cell) -> Html Msg
+renderCell status indexedCell =
+        td (buildCellAttributes status indexedCell) [text "a"]
 
-buildCellAttributes : (Position, Cell) -> List (Attribute Msg)
-buildCellAttributes (position, cell) =
+buildCellAttributes : Status -> (Position, Cell) -> List (Attribute Msg)
+buildCellAttributes status (position, cell) =
     let
         event = (clickEvent position cell)
         klass = class (cellClass cell)
     in
-        if (cell == Nothing) then [klass] ++ [event] else [klass]
+        if (cellShouldHaveMoveEvent status cell) then
+            [klass] ++ [event]
+        else
+            [klass]
+
+cellShouldHaveMoveEvent : Status -> Cell -> Bool
+cellShouldHaveMoveEvent status cell =
+    (cell == Nothing) && (isGameOngoing status)
 
 clickEvent : Position -> Cell -> Attribute Msg
 clickEvent position cell =
