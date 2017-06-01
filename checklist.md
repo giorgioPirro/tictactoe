@@ -7,6 +7,7 @@
 [ ] - Separate Board into Board and Main?
 [ ] - Add fuzzy testing where possible/appropriate
 [ ] - Move custom fuzzer for Game status into helper
+[ ] - add favicon
 
 
 
