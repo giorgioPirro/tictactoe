@@ -1,4 +1,4 @@
-module UITest exposing (defaultBoardRenderingTests, inPlayBoardRenderingTests,
+module UI.BoardTest exposing (defaultBoardRenderingTests, inPlayBoardRenderingTests,
                         gameOverBoardRenderingTests)
 
 import Test exposing (Test, describe, test, todo, fuzz, fuzz2, fuzz3)
