@@ -3,7 +3,7 @@ module UITest exposing (defaultBoardRenderingTests, inPlayBoardRenderingTests)
 import Test exposing (Test, describe, test, todo, fuzz, fuzz2)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (text, class)
-import Test.Html.Events as Events exposing (Event(..))
+import Test.Html.Event as Event exposing (click)
 import Expect
 import Random.Pcg
 import Fuzz exposing (intRange)
@@ -72,7 +72,7 @@ inPlayBoardRenderingTests : Test
 inPlayBoardRenderingTests =
     describe "When the game is Ongoing and Human is next"
         [ describe "the UI should render the board"
-            [ fuzz2 (intRange 0 2) (intRange 0 2) "with the appropriate commands" <|
+            [ fuzz2 (intRange 0 2) (intRange 0 2) "including move events for empty cells" <|
                   \row column->
                       Board.create Standard
                           |> renderBoard Ongoing (Just (Human X))
@@ -81,8 +81,22 @@ inPlayBoardRenderingTests =
                           |> Query.index row
                           |> Query.findAll [class "cell"]
                           |> Query.index column
-                          |> Events.simulate Click
-                          |> Events.expectEvent (HumanMove (twoDtoOneDIndex 3 row column))
+                          |> Event.simulate click
+                          |> Event.expect (HumanMove (twoDtoOneDIndex 3 row column))
+
+            , test "not including move events for cells with a mark in them" <|
+                  \() ->
+                      Board.create Standard
+                          |> Board.markCell (0, X)
+                          |> renderBoard Ongoing (Just (Human O))
+                          |> Query.fromHtml
+                          |> Query.findAll [class "row"]
+                          |> Query.index 0
+                          |> Query.findAll [class "cell"]
+                          |> Query.index 0
+                          |> Event.simulate click
+                          |> Event.toResult
+                          |> Expect.notEqual (Ok (HumanMove 0))
             ]
         ]
 
@@ -90,7 +104,6 @@ inPlayBoardRenderingTests =
 twoDtoOneDIndex : Int -> Int -> Int -> Int
 twoDtoOneDIndex boardWidth row column =
     (row * boardWidth) + column
-
 
 ----HELPER FUZZER
 --------------------------------------------------------------------------------

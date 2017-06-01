@@ -61,8 +61,16 @@ renderRow row =
         |> tr [class "row"]
 
 renderCell : (Position, Cell) -> Html Msg
-renderCell (position, cell) =
-    td [class (cellClass cell), (clickEvent position cell) ] []
+renderCell indexedCell =
+        td (buildCellAttributes indexedCell) []
+
+buildCellAttributes : (Position, Cell) -> List (Attribute Msg)
+buildCellAttributes (position, cell) =
+    let
+        event = (clickEvent position cell)
+        klass = class (cellClass cell)
+    in
+        if (cell == Nothing) then [klass] ++ [event] else [klass]
 
 clickEvent : Position -> Cell -> Attribute Msg
 clickEvent position cell =
