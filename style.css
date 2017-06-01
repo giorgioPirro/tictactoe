@@ -1,0 +1,20 @@
+body {
+  background-color: lightgrey;
+}
+
+.cell {
+  width: 150px;
+  height: 150px;
+}
+
+.cell.empty {
+  background-color: black;
+}
+
+.cell.crosses {
+  background-color: green;
+}
+
+.cell.noughts {
+  background-color: blue;
+}
