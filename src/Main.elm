@@ -1,8 +1,9 @@
-module Main exposing (Msg(..), renderBoard, renderGameStatus, update)
+module Main exposing (Msg(..), Model, renderBoard, renderGameStatus, update)
 
 import Html exposing (Html, Attribute, div, text, table, tr, td, p)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
+import Task
 
 import Board exposing (Board, Mark(..), Size(..), Position, Cell)
 import Game exposing (Status(..), Player(..), Game)
@@ -23,7 +24,7 @@ type alias Model = {game: Game}
 
 init : (Model, Cmd Msg)
 init =
-    ({game = (Game.create ((Human X),(Human O)) (Board.create Standard))}, Cmd.none)
+    ({game = (Game.create ((Human X),(Computer O)) (Board.create Standard))}, Cmd.none)
 
 
 -- UPDATE
@@ -32,10 +33,14 @@ init =
 type Msg = HumanMove Position
 
 update : Msg -> Model -> (Model, Cmd Msg)
-update msg {game} =
-    case msg of
-        HumanMove position ->
-            ({game = (Game.makeMove position game)}, Cmd.none)
+update (HumanMove position) {game} =
+    let
+        updatedGame = Game.makeMove position game
+    in
+        case (Game.whoseTurnNext game) of
+            Just (Human mark) -> ({game = updatedGame}, Cmd.none)
+            Just (Computer mark) -> ({game = updatedGame}, Task.perform HumanMove (Task.succeed 1))
+            Nothing -> ({game = updatedGame}, Cmd.none)
 
 
 -- VIEW
