@@ -1,5 +1,6 @@
 module Board exposing (Size(..), Mark(..), Cell, Board, Position, create, markCell,
-                       rows, rowsWithPositions, isFull, winningMark, toList, toArray)
+                       rows, rowsWithPositions, isFull, isPositionAvailable,
+                       winningMark, toList, toArray)
 
 import Array exposing (Array)
 import Set
@@ -23,14 +24,18 @@ create size =
         Standard -> Board (Array.repeat 9 Nothing)
 
 markCell : Move -> Board -> Board
-markCell (position, mark) (Board cells) =
-    Array.set position (Just mark) cells
+markCell (position, cell) (Board cells) =
+    Array.set position (Just cell) cells
         |> Board
 
 isFull : Board -> Bool
 isFull (Board marks) =
     Array.toList marks
-        |> List.all (\mark -> mark /= Nothing)
+        |> List.all (\cell -> cell /= Nothing)
+
+isPositionAvailable : Position -> Board -> Bool
+isPositionAvailable position (Board cells) =
+    Array.get position cells == Just Nothing
 
 winningMark : Board -> Maybe Mark
 winningMark board =

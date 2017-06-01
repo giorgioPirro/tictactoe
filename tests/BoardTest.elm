@@ -9,7 +9,7 @@ import Helpers exposing (createDrawBoardStandardSized, standardBoardXwinsHorizon
                          standardBoardOwinsVertically, standardBoardXwinsDownDiagonal,
                          standardBoardOwinsUpDiagonal)
 
-import Board exposing (Size(..), Mark(..), create, toList, toArray)
+import Board exposing (Size(..), Mark(..))
 
 
 boardTests : Test
@@ -54,17 +54,17 @@ boardTests =
         , test "provide a list of Cell rows (empty board)" <|
               \() ->
                   Board.create Standard
-                    |> Board.rows
-                    |> List.all (\row -> row == [Nothing, Nothing, Nothing])
-                    |> Expect.true "a standard board should have 3 rows with 3 cells each"
+                      |> Board.rows
+                      |> List.all (\row -> row == [Nothing, Nothing, Nothing])
+                      |> Expect.true "a standard board should have 3 rows with 3 cells each"
 
         , test "provide a list of Cell rows (marked board)" <|
               \() ->
                   Board.create Standard
-                    |> Board.markCell (2, X)
-                    |> Board.rows
-                    |> List.head
-                    |> Expect.equal (Just ([Nothing, Nothing, (Just X)]))
+                      |> Board.markCell (2, X)
+                      |> Board.rows
+                      |> List.head
+                      |> Expect.equal (Just ([Nothing, Nothing, (Just X)]))
 
         , test "know that a new board is not full" <|
               \() ->
@@ -77,6 +77,19 @@ boardTests =
                   createDrawBoardStandardSized
                       |> Board.isFull
                       |> Expect.true "draw board should be full"
+
+        , test "know when a cell is empty" <|
+              \() ->
+                  Board.create Standard
+                      |> Board.isPositionAvailable 0
+                      |> Expect.true "position should be available"
+
+        , test "know when a cell is not empty" <|
+              \() ->
+                  Board.create Standard
+                      |> Board.markCell (2, X)
+                      |> Board.isPositionAvailable 2
+                      |> Expect.false "position should not be available"
 
         , test "find no winning mark on an empty board" <|
               \() ->
