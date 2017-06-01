@@ -1,4 +1,4 @@
-module Main exposing (Msg(..), renderBoard)
+module Main exposing (Msg(..), renderBoard, renderGameStatus)
 
 import Html exposing (Html, Attribute, div, text, table, tr, td, p)
 import Html.Attributes exposing (..)
@@ -45,7 +45,23 @@ type alias Index = Int
 
 view : Game -> Html Msg
 view game =
-    renderBoard (Game.status game) (Game.whoseTurn game) (Game.getBoard game)
+    div []
+        [ renderBoard (Game.status game) (Game.whoseTurn game) (Game.getBoard game)
+        , renderGameStatus (Game.status game)
+        ]
+
+renderGameStatus : Status -> Html Msg
+renderGameStatus status =
+    case status of
+        Ongoing ->
+            div [class "outcome-box"]
+                []
+        Tie ->
+            div [class "outcome-box"]
+                [p [class "outcome-message"] [text "It was a tie!!"]]
+        Win mark ->
+            div [class "outcome-box"]
+                [p [class "outcome-message"] [text ((toString mark) ++ " has won!!")]]
 
 renderBoard : Status -> Maybe Player -> Board -> Html Msg
 renderBoard status currentPlayer board =
@@ -66,7 +82,7 @@ renderRow status row =
 
 renderCell : Status -> (Position, Cell) -> Html Msg
 renderCell status indexedCell =
-        td (buildCellAttributes status indexedCell) [text "a"]
+        td (buildCellAttributes status indexedCell) []
 
 buildCellAttributes : Status -> (Position, Cell) -> List (Attribute Msg)
 buildCellAttributes status (position, cell) =

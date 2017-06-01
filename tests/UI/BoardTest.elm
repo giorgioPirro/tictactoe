@@ -15,8 +15,6 @@ import Board exposing (Size(..), Mark(..))
 import Game exposing (Status(..), Player(..))
 import Main exposing (Msg(..), renderBoard)
 
-type Msg = Ciao
-
 defaultBoardRenderingTests : Test
 defaultBoardRenderingTests =
     describe "Regardless of Game Status"
