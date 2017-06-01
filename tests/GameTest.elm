@@ -38,6 +38,15 @@ gameTests =
                       |> Game.whoseTurn
                       |> Expect.equal (Just (Human X))
 
+
+        , test "not update the current player if a move has alread been made (O starts)" <|
+              \() ->
+                  createNewGame Standard (Human O, Human X)
+                      |> Game.makeMove 4
+                      |> Game.makeMove 4
+                      |> Game.whoseTurn
+                      |> Expect.equal (Just (Human X))
+
         , test "update the board after a move is made (X starts)" <|
               \() ->
                   createNewGame Standard (Human X, Human O)
@@ -55,6 +64,16 @@ gameTests =
                       |> Board.toArray
                       |> Array.get 5
                       |> Expect.equal (Just (Just O))
+
+        , test "not update the board if a move has already been made (X starts)" <|
+              \() ->
+                  createNewGame Standard (Human X, Human O)
+                      |> Game.makeMove 5
+                      |> Game.makeMove 5
+                      |> Game.getBoard
+                      |> Board.toArray
+                      |> Array.get 5
+                      |> Expect.equal (Just (Just X))
 
         , test "know that a game is ongoing at the start" <|
               \() ->

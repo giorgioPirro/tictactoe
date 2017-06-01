@@ -3,7 +3,7 @@ module Game exposing(Player(..), Game, Status(..), create, whoseTurn, makeMove,
 
 import Maybe
 
-import Board exposing(Mark(..), Board, Position)
+import Board exposing(Mark(..), Board, Position, Move)
 
 type Player = Human Mark | Computer Mark
 type alias Game = {board: Board, players: (Player, Player)}
@@ -22,17 +22,36 @@ whoseTurn ({players} as game) =
             Nothing
 
 makeMove : Position -> Game -> Game
-makeMove position {board, players} =
-    let
-        markOfCurrentPlayer = extractMark(Tuple.first players)
-        move = (position, markOfCurrentPlayer)
-        newBoard = Board.markCell move board
-    in
-        Game newBoard (swapPlayers players)
+makeMove position game =
+    if (isMoveAllowed position game) then
+        addMoveToGame position game
+    else
+        game
 
-getBoard : Game -> Board
-getBoard {board} =
-    board
+isMoveAllowed : Position -> Game -> Bool
+isMoveAllowed position {board} =
+    Board.isPositionAvailable position board
+
+addMoveToGame : Position -> Game -> Game
+addMoveToGame position {board, players} =
+    let
+        move = (position, (currentPlayersMark players))
+        newBoard = addMoveToBoard move board
+        newPlayers = swapPlayers players
+    in
+        Game newBoard newPlayers
+
+addMoveToBoard : Move -> Board -> Board
+addMoveToBoard move board =
+    Board.markCell move board
+
+swapPlayers : (Player, Player) -> (Player, Player)
+swapPlayers (playerOne, playerTwo) =
+    (playerTwo, playerOne)
+
+currentPlayersMark : (Player, Player) -> Mark
+currentPlayersMark (currentPlayer, _) =
+    extractMark currentPlayer
 
 extractMark : Player -> Mark
 extractMark player =
@@ -40,9 +59,10 @@ extractMark player =
         Human mark -> mark
         Computer mark -> mark
 
-swapPlayers : (Player, Player) -> (Player, Player)
-swapPlayers (playerOne, playerTwo) =
-    (playerTwo, playerOne)
+
+getBoard : Game -> Board
+getBoard {board} =
+    board
 
 status : Game -> Status
 status {board} =

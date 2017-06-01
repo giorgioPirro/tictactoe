@@ -1,4 +1,4 @@
-module Board exposing (Size(..), Mark(..), Cell, Board, Position, create, markCell,
+module Board exposing (Size(..), Mark(..), Cell, Board, Position, Move, create, markCell,
                        rows, rowsWithPositions, isFull, isPositionAvailable,
                        winningMark, toList, toArray)
 
