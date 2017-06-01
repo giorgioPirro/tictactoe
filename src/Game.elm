@@ -29,8 +29,10 @@ makeMove position game =
         game
 
 isMoveAllowed : Position -> Game -> Bool
-isMoveAllowed position {board} =
+isMoveAllowed position ({board} as game) =
     Board.isPositionAvailable position board
+    &&
+    status game == Ongoing
 
 addMoveToGame : Position -> Game -> Game
 addMoveToGame position {board, players} =

@@ -98,4 +98,10 @@ gameTests =
                   createOwinGameStandardSizedBoard
                       |> Game.status
                       |> Expect.equal (Win O)
+
+        , test "not update the game state if a move is made when the game is over" <|
+              \() ->
+                  createOwinGameStandardSizedBoard
+                      |> Game.makeMove 7
+                      |> Expect.equal createOwinGameStandardSizedBoard
         ]
