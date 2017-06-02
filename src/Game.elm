@@ -1,5 +1,5 @@
 module Game exposing(Player(..), Game, Status(..), create, whoseTurn,
-                     makeMove, getBoard, status, positionsAvailable)
+                     makeMove, getBoard, getPlayers, status, positionsAvailable)
 
 import Maybe
 
@@ -68,6 +68,10 @@ extractMark player =
 getBoard : Game -> Board
 getBoard {board} =
     board
+
+getPlayers : Game -> (Player, Player)
+getPlayers {players} =
+    players
 
 status : Game -> Status
 status {board} =

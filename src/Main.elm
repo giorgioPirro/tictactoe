@@ -46,18 +46,16 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg {game} =
     case msg of
         MakeMove position ->
-            game
-                |> Game.makeMove position
-                |> generateNewModel (Game.whoseTurnNext game)
+            Game.makeMove position game
+                |> modelWithMessage
 
         NewGame boardSize gameType ->
-            gameType
-                |> GameGenerator.createGame boardSize
-                |> generateNewModel (Game.whoseTurn game)
+            GameGenerator.createGame boardSize gameType
+                |> modelWithMessage
 
-generateNewModel : Maybe Player -> Game -> (Model, Cmd Msg)
-generateNewModel playerToMakeNextMove newGame =
-   case playerToMakeNextMove of
+modelWithMessage : Game -> (Model, Cmd Msg)
+modelWithMessage newGame =
+   case (Game.whoseTurn newGame) of
        Just (Human _) -> ({game = newGame}, Cmd.none)
        Just (Computer _) -> ({game = newGame}, (computerMove newGame))
        Nothing -> ({game = newGame}, Cmd.none)
@@ -77,16 +75,21 @@ computerMove game =
 -- VIEW
 
 
-type alias Index = Int
-
 view : Model -> Html Msg
 view {game} =
-    div []
-        [ renderResetButton game --CHANGEME TO PASS RELEVEANT DATA INSTEAD OF FULL GAME!!!!!!!!!!!!!!!!!
-        , renderSelectNewGame (Board.size (.board game)) (whichGameType (.players game))
-        , renderBoard (Game.status game) (Game.whoseTurn game) (Game.getBoard game)
-        , renderGameStatus (Game.status game)
-        ]
+    let
+        board = Game.getBoard game
+        size = Board.size board
+        gameType = GameGenerator.whichGameType (Game.getPlayers game)
+        status = Game.status game
+        whoseTurn = Game.whoseTurn game
+    in
+        div []
+            [ renderResetButton game
+            , renderSelectNewGame size gameType
+            , renderBoard status whoseTurn board
+            , renderGameStatus status
+            ]
 
 renderSelectNewGame : Size -> GameType -> Html Msg
 renderSelectNewGame boardSize currentGameType =
