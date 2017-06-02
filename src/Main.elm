@@ -1,13 +1,15 @@
 module Main exposing (Msg(..), Model, renderBoard, renderGameStatus,
-                      renderResetButton, update)
+                      renderResetButton, renderSelectNewGame, update)
 
-import Html exposing (Html, Attribute, div, text, table, tr, td, p, button)
+import Html exposing (Html, Attribute, div, text, table, tr, td, p, button,
+                      select, option)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 import Task
 
 import Board exposing (Board, Mark(..), Size(..), Position, Cell, size)
 import Game exposing (Status(..), Player(..), Game)
+import GameGenerator exposing (GameType(..), gameTypes, whichGameType)
 import Ai
 
 main =
@@ -34,7 +36,7 @@ init =
 
 type Msg
   = MakeMove Position
-  | NewGame Size (Player, Player)
+  | NewGame Size GameType
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg {game} =
@@ -48,7 +50,7 @@ update msg {game} =
                     Just (Computer mark) -> ({game = updatedGame}, (computerMove updatedGame))
                     Nothing -> ({game = updatedGame}, Cmd.none)
 
-        NewGame boardSize players ->
+        NewGame boardSize gameType ->
             init
 
 computerMove : Game -> Cmd Msg
@@ -71,17 +73,46 @@ type alias Index = Int
 view : Model -> Html Msg
 view {game} =
     div []
-        [ renderResetButton game
+        [ renderResetButton game --CHANGEME TO PASS RELEVEANT DATA INSTEAD OF FULL GAME!!!!!!!!!!!!!!!!!
+        , renderSelectNewGame (Board.size (.board game)) (whichGameType (.players game))
         , renderBoard (Game.status game) (Game.whoseTurn game) (Game.getBoard game)
         , renderGameStatus (Game.status game)
         ]
+
+renderSelectNewGame : Size -> GameType -> Html Msg
+renderSelectNewGame boardSize currentGameType =
+    gameTypes
+        |> List.map (\aGameType -> (buildOption currentGameType aGameType))
+        |> select [onInput (blah boardSize)]
+
+blah : Size -> String -> Msg
+blah boardSize gameTypeAsString =
+    case gameTypeAsString of
+        "HumanVsHuman" ->
+            NewGame boardSize HumanVsHuman
+        "HumanVsComputer" ->
+            NewGame boardSize HumanVsComputer
+        "ComputerVsHuman" ->
+            NewGame boardSize ComputerVsHuman
+        _ ->
+            NewGame boardSize ComputerVsComputer
+
+buildOption : GameType -> GameType -> Html Msg
+buildOption currentGameType aGameType =
+    let
+        typeAsString = toString aGameType
+    in
+        if (aGameType == currentGameType) then
+            option [value typeAsString, selected True] [text typeAsString]
+        else
+            option [value typeAsString] [text typeAsString]
 
 renderResetButton : Game -> Html Msg
 renderResetButton {players, board} =
     let
         boardSize = (Board.size board)
     in
-        button [onClick (NewGame boardSize players)] [text "Reset"]
+        button [onClick (NewGame boardSize (whichGameType players))] [text "Reset"]
 
 renderGameStatus : Status -> Html Msg
 renderGameStatus status =
