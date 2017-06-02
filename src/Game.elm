@@ -1,4 +1,4 @@
-module Game exposing(Player(..), Game, Status(..), create, whoseTurn, whoseTurnNext,
+module Game exposing(Player(..), Game, Status(..), create, whoseTurn,
                      makeMove, getBoard, status, positionsAvailable)
 
 import Maybe
@@ -19,13 +19,6 @@ whoseTurn ({players} as game) =
         Nothing
     else
         (Just (Tuple.first players))
-
-whoseTurnNext : Game -> Maybe Player
-whoseTurnNext ({players} as game) =
-    if (gameIsOver game) then
-        Nothing
-    else
-        (Just (Tuple.second players))
 
 gameIsOver : Game -> Bool
 gameIsOver game =
