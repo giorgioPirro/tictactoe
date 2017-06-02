@@ -82,7 +82,7 @@ inPlayBoardRenderingTests =
                           |> Query.findAll [class "cell"]
                           |> Query.index column
                           |> Event.simulate click
-                          |> Event.expect (HumanMove (twoDtoOneDIndex 3 row column))
+                          |> Event.expect (MakeMove (twoDtoOneDIndex 3 row column))
 
             , test "not including move events for cells with a mark in them" <|
                   \() ->
@@ -96,7 +96,7 @@ inPlayBoardRenderingTests =
                           |> Query.index 0
                           |> Event.simulate click
                           |> Event.toResult
-                          |> Expect.notEqual (Ok (HumanMove 0))
+                          |> Expect.notEqual (Ok (MakeMove 0))
             ]
         ]
 
@@ -115,7 +115,7 @@ gameOverBoardRenderingTests =
                         |> Query.index column
                         |> Event.simulate click
                         |> Event.toResult
-                        |> Expect.notEqual (Ok (HumanMove (twoDtoOneDIndex 3 row column)))
+                        |> Expect.notEqual (Ok (MakeMove (twoDtoOneDIndex 3 row column)))
             ]
         ]
 

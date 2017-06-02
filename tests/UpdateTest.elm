@@ -16,11 +16,11 @@ updateTests =
         [ describe "given the Move message should"
             [ test "have a 'none' command when the next player to make a move is of Human nature" <|
                 \() ->
-                    update (HumanMove 0) {game = (createNewGame Standard ((Human X), (Human O)))}
+                    update (MakeMove 0) {game = (createNewGame Standard ((Human X), (Human O)))}
                         |> Tuple.second
                         |> Expect.equal Cmd.none
 
-            , Test.todo "have a move command when the next player to make a move is of Human nature"
+            , Test.todo "have a move command when the next player to make a move is of Computer nature"
             ]
         ]
 

@@ -30,16 +30,16 @@ init =
 -- UPDATE
 
 
-type Msg = HumanMove Position
+type Msg = MakeMove Position
 
 update : Msg -> Model -> (Model, Cmd Msg)
-update (HumanMove position) {game} =
+update (MakeMove position) {game} =
     let
         updatedGame = Game.makeMove position game
     in
         case (Game.whoseTurnNext game) of
             Just (Human mark) -> ({game = updatedGame}, Cmd.none)
-            Just (Computer mark) -> ({game = updatedGame}, Task.perform HumanMove (Task.succeed 1))
+            Just (Computer mark) -> ({game = updatedGame}, Task.perform MakeMove (Task.succeed 1))
             Nothing -> ({game = updatedGame}, Cmd.none)
 
 
@@ -106,7 +106,7 @@ cellShouldHaveMoveEvent status cell =
 
 clickEvent : Position -> Cell -> Attribute Msg
 clickEvent position cell =
-    onClick (HumanMove position)
+    onClick (MakeMove position)
 
 cellClass : Cell -> String
 cellClass cell =
