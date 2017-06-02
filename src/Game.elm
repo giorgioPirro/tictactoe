@@ -1,5 +1,5 @@
 module Game exposing(Player(..), Game, Status(..), create, whoseTurn, whoseTurnNext,
-                     makeMove, getBoard, status)
+                     makeMove, getBoard, status, positionsAvailable)
 
 import Maybe
 
@@ -86,3 +86,10 @@ status {board} =
                 Tie
             else
                 Ongoing
+
+positionsAvailable : Game -> List Position
+positionsAvailable ({board} as game) =
+    if (gameIsOver game) then
+        []
+    else
+        Board.positionsAvailable board

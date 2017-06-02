@@ -123,4 +123,23 @@ gameTests =
                   createOwinGameStandardSizedBoard
                       |> Game.makeMove 7
                       |> Expect.equal createOwinGameStandardSizedBoard
+
+        , test "provide all positions available, which is all positions at the beginning" <|
+              \() ->
+                  createNewGame Standard (Human O, Human X)
+                      |> Game.positionsAvailable
+                      |> Expect.equal (List.range 0 8)
+
+        , test "provide all positions available after a move is made" <|
+              \() ->
+                  createNewGame Standard (Human O, Human X)
+                      |> Game.makeMove 0
+                      |> Game.positionsAvailable
+                      |> Expect.equal (List.range 1 8)
+
+        , test "provide no positions available when the game is over (board still has empty cells)" <|
+              \() ->
+                  createOwinGameStandardSizedBoard
+                      |> Game.positionsAvailable
+                      |> Expect.equal []
         ]

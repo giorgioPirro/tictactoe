@@ -1,6 +1,6 @@
 module Board exposing (Size(..), Mark(..), Cell, Board, Position, Move, create, markCell,
                        rows, rowsWithPositions, isFull, isPositionAvailable,
-                       winningMark, toList, toArray)
+                       winningMark, positionsAvailable, toList, toArray)
 
 import Array exposing (Array)
 import Set
@@ -92,6 +92,13 @@ width (Board marks) =
         |> toFloat
         |> sqrt
         |> truncate
+
+positionsAvailable : Board -> List Position
+positionsAvailable board =
+    toList board
+        |> List.indexedMap (,)
+        |> List.filter (\(index,cell) -> cell == Nothing)
+        |> List.map (\(index,cell) -> index)
 
 toList : Board -> List Cell
 toList (Board marks) =
