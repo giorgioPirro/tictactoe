@@ -9,7 +9,8 @@ import Task
 
 import Board exposing (Board, Mark(..), Size(..), Position, Cell, size)
 import Game exposing (Status(..), Player(..), Game)
-import GameGenerator exposing (GameType(..), gameTypes, whichGameType)
+import GameGenerator exposing (GameType(..), gameTypes, whichGameType, createGame,
+                               gameTypeFromString)
 import Ai
 
 main =
@@ -28,7 +29,10 @@ type alias Model = {game: Game}
 
 init : (Model, Cmd Msg)
 init =
-    ({game = (Game.create ((Human X),(Computer O)) (Board.create Standard))}, Cmd.none)
+   let
+       defaultGame = GameGenerator.createGame Standard HumanVsHuman
+   in
+       ({game = defaultGame}, Cmd.none)
 
 
 -- UPDATE
@@ -42,16 +46,21 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg {game} =
     case msg of
         MakeMove position ->
-            let
-                updatedGame = Game.makeMove position game
-            in
-                case (Game.whoseTurnNext game) of
-                    Just (Human mark) -> ({game = updatedGame}, Cmd.none)
-                    Just (Computer mark) -> ({game = updatedGame}, (computerMove updatedGame))
-                    Nothing -> ({game = updatedGame}, Cmd.none)
+            game
+                |> Game.makeMove position
+                |> generateNewModel (Game.whoseTurnNext game)
 
         NewGame boardSize gameType ->
-            init
+            gameType
+                |> GameGenerator.createGame boardSize
+                |> generateNewModel (Game.whoseTurn game)
+
+generateNewModel : Maybe Player -> Game -> (Model, Cmd Msg)
+generateNewModel playerToMakeNextMove newGame =
+   case playerToMakeNextMove of
+       Just (Human _) -> ({game = newGame}, Cmd.none)
+       Just (Computer _) -> ({game = newGame}, (computerMove newGame))
+       Nothing -> ({game = newGame}, Cmd.none)
 
 computerMove : Game -> Cmd Msg
 computerMove game =
@@ -83,19 +92,11 @@ renderSelectNewGame : Size -> GameType -> Html Msg
 renderSelectNewGame boardSize currentGameType =
     gameTypes
         |> List.map (\aGameType -> (buildOption currentGameType aGameType))
-        |> select [onInput (blah boardSize)]
+        |> select [onInput (generateNewGameMsg boardSize)]
 
-blah : Size -> String -> Msg
-blah boardSize gameTypeAsString =
-    case gameTypeAsString of
-        "HumanVsHuman" ->
-            NewGame boardSize HumanVsHuman
-        "HumanVsComputer" ->
-            NewGame boardSize HumanVsComputer
-        "ComputerVsHuman" ->
-            NewGame boardSize ComputerVsHuman
-        _ ->
-            NewGame boardSize ComputerVsComputer
+generateNewGameMsg : Size -> String -> Msg
+generateNewGameMsg boardSize gameTypeAsString =
+    NewGame boardSize (gameTypeFromString gameTypeAsString)
 
 buildOption : GameType -> GameType -> Html Msg
 buildOption currentGameType aGameType =

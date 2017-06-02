@@ -1,7 +1,8 @@
-module GameGenerator exposing (GameType(..), gameTypes, whichGameType)
+module GameGenerator exposing (GameType(..), gameTypes, whichGameType, createGame,
+                               gameTypeFromString)
 
-import Game exposing (Player(..))
-import Board exposing (Board, Size(..))
+import Game exposing (Game, Player(..))
+import Board exposing (Board, Size(..), Mark(..))
 
 type GameType
   = HumanVsHuman
@@ -24,3 +25,31 @@ whichGameType players =
             ComputerVsHuman
         (Computer _, Computer _) ->
             ComputerVsComputer
+
+createGame : Size -> GameType -> Game
+createGame boardSize gameType =
+    let
+        board = Board.create boardSize
+    in
+      case gameType of
+          HumanVsHuman ->
+              Game.create (Human X, Human O) board
+          HumanVsComputer ->
+              Game.create (Human X, Computer O) board
+          ComputerVsHuman ->
+              Game.create (Computer X, Human O) board
+          ComputerVsComputer ->
+              Game.create (Computer X, Computer O) board
+
+gameTypeFromString : String -> GameType
+gameTypeFromString typeDescription =
+    case typeDescription of
+        "HumanVsHuman" ->
+            HumanVsHuman
+        "HumanVsComputer" ->
+            HumanVsComputer
+        "ComputerVsHuman" ->
+            ComputerVsHuman
+        _ ->
+            ComputerVsComputer
+
