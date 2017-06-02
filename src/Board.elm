@@ -9,7 +9,7 @@ import Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual,
                                 transpose, getAt, chunkify)
 import Utilities.Maybe exposing (flatMaybe)
 
-type Size  = Standard
+type Size = Standard | Large
 
 type Mark  = X | O
 type alias Cell = (Maybe Mark)
@@ -22,6 +22,7 @@ create : Size -> Board
 create size =
     case size of
         Standard -> Board (Array.repeat 9 Nothing)
+        Large -> Board (Array.repeat 16 Nothing)
 
 markCell : Move -> Board -> Board
 markCell (position, cell) (Board cells) =
