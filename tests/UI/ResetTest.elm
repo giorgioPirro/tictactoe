@@ -3,7 +3,6 @@ module UI.ResetTest exposing (resetTests)
 import Test exposing (Test, test, describe)
 import Expect
 import Test.Html.Query as Query
-import Test.Html.Selector exposing (class)
 import Test.Html.Event as Event exposing (click)
 
 import Main exposing (Msg(..), renderResetButton)
