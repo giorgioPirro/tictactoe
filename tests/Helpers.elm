@@ -4,7 +4,7 @@ module Helpers exposing (createNewGame, createTieGameStandardSizedBoard,
                          standardBoardOwinsHorizontally, standardBoardXwinsVertically,
                          standardBoardOwinsVertically, standardBoardXwinsDownDiagonal,
                          standardBoardOwinsUpDiagonal, randomGameStatus,
-                         randomGameOverStatus)
+                         randomGameOverStatus, randomGameType, randomBoardSize)
 
 import Random.Pcg
 import Fuzz
@@ -12,6 +12,7 @@ import Shrink
 
 import Board exposing (Size(..), Mark(..), Board)
 import Game exposing (Game, Player(..), Status(..))
+import GameGenerator exposing (GameType(..))
 
 createNewGame : Size -> (Player, Player) -> Game
 createNewGame size players =
@@ -105,6 +106,14 @@ randomGameOverStatus : Fuzz.Fuzzer Status
 randomGameOverStatus =
     Fuzz.custom (randomStatusGenerator 1 3) Shrink.noShrink
 
+randomGameType : Fuzz.Fuzzer GameType
+randomGameType =
+    Fuzz.custom (randomGameTypeGenerator) Shrink.noShrink
+
+randomBoardSize : Fuzz.Fuzzer Size
+randomBoardSize =
+    Fuzz.custom (randomBoardSizeGenerator) Shrink.noShrink
+
 intToStatus : Int -> Status
 intToStatus statusId =
     case statusId of
@@ -113,6 +122,28 @@ intToStatus statusId =
         2 -> Win X
         _ -> Win O
 
+intToGameType : Int -> GameType
+intToGameType statusId =
+    case statusId of
+        0 -> HumanVsHuman
+        1 -> HumanVsComputer
+        2 -> ComputerVsHuman
+        _ -> ComputerVsComputer
+
+intToBoardSize : Int -> Size
+intToBoardSize statusId =
+    case statusId of
+        0 -> Standard
+        _ -> Large
+
 randomStatusGenerator : Int -> Int -> Random.Pcg.Generator Status
 randomStatusGenerator startRange endRange =
    Random.Pcg.map intToStatus (Random.Pcg.int startRange endRange)
+
+randomGameTypeGenerator : Random.Pcg.Generator GameType
+randomGameTypeGenerator =
+   Random.Pcg.map intToGameType (Random.Pcg.int 0 3)
+
+randomBoardSizeGenerator : Random.Pcg.Generator Size
+randomBoardSizeGenerator =
+  Random.Pcg.map intToBoardSize (Random.Pcg.int 0 1)
