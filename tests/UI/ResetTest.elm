@@ -9,6 +9,7 @@ import Main exposing (Msg(..), renderResetButton)
 import Helpers exposing (createNewGame, createTieGameStandardSizedBoard)
 import Board exposing (Size(..), Mark(..))
 import Game exposing (Player(..))
+import GameGenerator exposing (GameType(..))
 
 resetTests : Test
 resetTests =
@@ -19,7 +20,7 @@ resetTests =
                       |> renderResetButton
                       |> Query.fromHtml
                       |> Event.simulate click
-                      |> Event.expect (NewGame Standard (Human X, Human O))
+                      |> Event.expect (NewGame Standard HumanVsHuman)
 
          , test "trigger a 'new game' event when clicked (Human v Computer), large" <|
               \() ->
@@ -27,7 +28,7 @@ resetTests =
                       |> renderResetButton
                       |> Query.fromHtml
                       |> Event.simulate click
-                      |> Event.expect (NewGame Large (Human X, Computer O))
+                      |> Event.expect (NewGame Large HumanVsComputer)
 
          , test "trigger a 'new game' event when clicked (Computer v Computer), standard" <|
               \() ->
@@ -35,5 +36,5 @@ resetTests =
                       |> renderResetButton
                       |> Query.fromHtml
                       |> Event.simulate click
-                      |> Event.expect (NewGame Standard (Computer X, Computer O))
+                      |> Event.expect (NewGame Standard ComputerVsComputer)
         ]
