@@ -127,7 +127,6 @@ intToGameType statusId =
     case statusId of
         0 -> HumanVsHuman
         1 -> HumanVsComputer
-        2 -> ComputerVsHuman
         _ -> ComputerVsComputer
 
 intToBoardSize : Int -> Size
@@ -142,7 +141,7 @@ randomStatusGenerator startRange endRange =
 
 randomGameTypeGenerator : Random.Pcg.Generator GameType
 randomGameTypeGenerator =
-   Random.Pcg.map intToGameType (Random.Pcg.int 0 3)
+   Random.Pcg.map intToGameType (Random.Pcg.int 0 2)
 
 randomBoardSizeGenerator : Random.Pcg.Generator Size
 randomBoardSizeGenerator =

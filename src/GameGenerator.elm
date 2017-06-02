@@ -7,12 +7,11 @@ import Board exposing (Board, Size(..), Mark(..))
 type GameType
   = HumanVsHuman
   | HumanVsComputer
-  | ComputerVsHuman
   | ComputerVsComputer
 
 gameTypes : List GameType
 gameTypes =
-    [HumanVsHuman, HumanVsComputer, ComputerVsHuman, ComputerVsComputer]
+    [HumanVsHuman, HumanVsComputer, ComputerVsComputer]
 
 whichGameType : (Player, Player) -> GameType
 whichGameType players =
@@ -22,7 +21,7 @@ whichGameType players =
         (Human _, Computer _) ->
             HumanVsComputer
         (Computer _, Human _) ->
-            ComputerVsHuman
+            HumanVsComputer
         (Computer _, Computer _) ->
             ComputerVsComputer
 
@@ -36,8 +35,6 @@ createGame boardSize gameType =
               Game.create (Human X, Human O) board
           HumanVsComputer ->
               Game.create (Human X, Computer O) board
-          ComputerVsHuman ->
-              Game.create (Computer X, Human O) board
           ComputerVsComputer ->
               Game.create (Computer X, Computer O) board
 
@@ -48,8 +45,6 @@ gameTypeFromString typeDescription =
             HumanVsHuman
         "HumanVsComputer" ->
             HumanVsComputer
-        "ComputerVsHuman" ->
-            ComputerVsHuman
         _ ->
             ComputerVsComputer
 
