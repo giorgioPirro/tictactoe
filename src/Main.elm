@@ -1,11 +1,12 @@
-module Main exposing (Msg(..), Model, renderBoard, renderGameStatus, update)
+module Main exposing (Msg(..), Model, renderBoard, renderGameStatus,
+                      renderResetButton, update)
 
-import Html exposing (Html, Attribute, div, text, table, tr, td, p)
+import Html exposing (Html, Attribute, div, text, table, tr, td, p, button)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Task
 
-import Board exposing (Board, Mark(..), Size(..), Position, Cell)
+import Board exposing (Board, Mark(..), Size(..), Position, Cell, size)
 import Game exposing (Status(..), Player(..), Game)
 import Ai
 
@@ -31,7 +32,9 @@ init =
 -- UPDATE
 
 
-type Msg = MakeMove Position
+type Msg
+  = MakeMove Position
+  | NewGame Size (Player, Player)
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg {game} =
@@ -44,6 +47,9 @@ update msg {game} =
                     Just (Human mark) -> ({game = updatedGame}, Cmd.none)
                     Just (Computer mark) -> ({game = updatedGame}, (computerMove updatedGame))
                     Nothing -> ({game = updatedGame}, Cmd.none)
+
+        NewGame boardSize players ->
+            init
 
 computerMove : Game -> Cmd Msg
 computerMove game =
@@ -65,9 +71,17 @@ type alias Index = Int
 view : Model -> Html Msg
 view {game} =
     div []
-        [ renderBoard (Game.status game) (Game.whoseTurn game) (Game.getBoard game)
+        [ renderResetButton game
+        , renderBoard (Game.status game) (Game.whoseTurn game) (Game.getBoard game)
         , renderGameStatus (Game.status game)
         ]
+
+renderResetButton : Game -> Html Msg
+renderResetButton {players, board} =
+    let
+        boardSize = (Board.size board)
+    in
+        button [onClick (NewGame boardSize players)] [text "Reset"]
 
 renderGameStatus : Status -> Html Msg
 renderGameStatus status =
