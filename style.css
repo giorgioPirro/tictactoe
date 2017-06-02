@@ -1,20 +1,56 @@
+@keyframes scrollRight {
+    from { background-position: -200px 0; }
+    to { background-position: 0 0; }
+}
+
+@keyframes scrollLeft {
+    from { background-position: 0 -200px; }
+    to { background-position: 0 0; }
+}
+
 body {
-  background-color: lightgrey;
+    background-color: #14bdac;
+}
+
+table {
+		margin: 20px;
+    border-collapse: collapse;
+    border-style: hidden;
+    width: 600px;
+    height: 600px;
+}
+
+table td {
+    border: 10px solid #0da192;
+		border-radius: 5px;
 }
 
 .cell {
-  width: 150px;
-  height: 150px;
+    width: 150px;
+    height: 150px;
+    background-size: cover;
+
 }
 
 .cell.empty {
-  background-color: black;
+    background-color: transparent;
 }
 
 .cell.crosses {
-  background-color: green;
+    background-color: transparent;
+    background-repeat: repeat-x;
+    background-image:url("https://cdn.pixabay.com/photo/2014/09/26/10/45/delete-462216_640.png");
+
+    background-position: 0px 0px;
+    background-repeat: space;
+    animation: scrollRight 0.7s;
 }
 
 .cell.noughts {
-  background-color: blue;
+    background-color: transparent;
+    background-image:url("http://www.emoji.co.uk/files/microsoft-emojis/symbols-windows10/10295-medium-white-circle.png");
+
+    background-position: 0px 0px;
+    background-repeat: space;
+    animation: scrollLeft 0.7s;
 }
