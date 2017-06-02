@@ -7,6 +7,7 @@ import Task
 
 import Board exposing (Board, Mark(..), Size(..), Position, Cell)
 import Game exposing (Status(..), Player(..), Game)
+import Ai
 
 main =
   Html.program
@@ -33,14 +34,27 @@ init =
 type Msg = MakeMove Position
 
 update : Msg -> Model -> (Model, Cmd Msg)
-update (MakeMove position) {game} =
+update msg {game} =
+    case msg of
+        MakeMove position ->
+            let
+                updatedGame = Game.makeMove position game
+            in
+                case (Game.whoseTurnNext game) of
+                    Just (Human mark) -> ({game = updatedGame}, Cmd.none)
+                    Just (Computer mark) -> ({game = updatedGame}, (computerMove updatedGame))
+                    Nothing -> ({game = updatedGame}, Cmd.none)
+
+computerMove : Game -> Cmd Msg
+computerMove game =
     let
-        updatedGame = Game.makeMove position game
+        chosenPosition = Ai.pickBestPosition game
     in
-        case (Game.whoseTurnNext game) of
-            Just (Human mark) -> ({game = updatedGame}, Cmd.none)
-            Just (Computer mark) -> ({game = updatedGame}, Task.perform MakeMove (Task.succeed 1))
-            Nothing -> ({game = updatedGame}, Cmd.none)
+        case chosenPosition of
+            Just position ->
+                Task.perform MakeMove (Task.succeed position)
+            Nothing ->
+                Cmd.none
 
 
 -- VIEW
