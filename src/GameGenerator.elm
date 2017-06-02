@@ -1,9 +1,26 @@
-module GameGenerator exposing (GameType(..))
+module GameGenerator exposing (GameType(..), gameTypes, whichGameType)
 
 import Game exposing (Player(..))
 import Board exposing (Board)
 
 type GameType
-  = HumanVsHuman ((Human, Human) Board)
-  | HumanVsComputer ((Human, Computer) Board)
-  | ComputerVsComputer ((Computer, Computer) Board)
+  = HumanVsHuman
+  | HumanVsComputer
+  | ComputerVsHuman
+  | ComputerVsComputer
+
+gameTypes : List GameType
+gameTypes =
+    [HumanVsHuman, HumanVsComputer, ComputerVsHuman, ComputerVsComputer]
+
+whichGameType : (Player, Player) -> GameType
+whichGameType players =
+    case players of
+        (Human _, Human _) ->
+            HumanVsHuman
+        (Human _, Computer _) ->
+            HumanVsComputer
+        (Computer _, Human _) ->
+            ComputerVsHuman
+        (Computer _, Computer _) ->
+            ComputerVsComputer
