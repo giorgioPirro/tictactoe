@@ -1,4 +1,4 @@
-module Game exposing(Player(..), Game, Status(..), create, whoseTurn,
+module Game exposing(Player(..), Game, Status(..), create, whoseTurn, gameIsOver,
                      makeMove, getBoard, getPlayers, status, positionsAvailable,
                      extractMark)
 
@@ -16,14 +16,14 @@ create players board =
 
 whoseTurn : Game -> Maybe Player
 whoseTurn ({players} as game) =
-    if (gameIsOver game) then
+    if (gameIsOver (status game)) then
         Nothing
     else
         (Just (Tuple.first players))
 
-gameIsOver : Game -> Bool
-gameIsOver game =
-    status game /= Ongoing
+gameIsOver : Status -> Bool
+gameIsOver status =
+    status /= Ongoing
 
 makeMove : Position -> Game -> Game
 makeMove position game =
@@ -87,7 +87,7 @@ status {board} =
 
 positionsAvailable : Game -> List Position
 positionsAvailable ({board} as game) =
-    if (gameIsOver game) then
+    if (gameIsOver (status game)) then
         []
     else
         Board.positionsAvailable board
