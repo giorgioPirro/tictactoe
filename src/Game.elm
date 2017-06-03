@@ -1,5 +1,6 @@
 module Game exposing(Player(..), Game, Status(..), create, whoseTurn,
-                     makeMove, getBoard, getPlayers, status, positionsAvailable)
+                     makeMove, getBoard, getPlayers, status, positionsAvailable,
+                     extractMark)
 
 import Maybe
 

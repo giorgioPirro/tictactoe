@@ -1,5 +1,6 @@
 module Main exposing (Msg(..), Model, renderBoard, renderGameStatus,
-                      renderResetButton, renderSelectNewGame, update)
+                      renderResetButton, renderSelectNewGame, renderSelectBoard,
+                      renderWhoseTurn, update)
 
 import Html exposing (Html, Attribute, div, text, table, tr, td, p, button,
                       select, option)
@@ -7,7 +8,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Task
 
-import Board exposing (Board, Mark(..), Size(..), Position, Cell, size)
+import Board exposing (Board, Mark(..), Size(..), Position, Cell, size, sizesAvailable,
+                       sizeFromString)
 import Game exposing (Status(..), Player(..), Game)
 import GameGenerator exposing (GameType(..), gameTypes, whichGameType, createGame,
                                gameTypeFromString)
@@ -85,11 +87,46 @@ view {game} =
         whoseTurn = Game.whoseTurn game
     in
         div []
-            [ renderResetButton game
-            , renderSelectNewGame size gameType
+            [ renderWhoseTurn whoseTurn
             , renderBoard status whoseTurn board
+            , renderResetButton game
+            , renderSelectNewGame size gameType
+            , renderSelectBoard size gameType
             , renderGameStatus status
             ]
+
+renderWhoseTurn : Maybe Player -> Html Msg
+renderWhoseTurn player =
+    case player of
+        Nothing ->
+            div []
+                [ div [id "turn-crosses", class "turn-display"] []
+                , div [id "turn-noughts", class "turn-display"] []
+                ]
+        Just player ->
+            div [] (buildTurnBoxes (Game.extractMark player))
+
+buildTurnBoxes : Mark -> List (Html Msg)
+buildTurnBoxes mark =
+    case mark of
+        X ->
+            [ div [id "turn-crosses", class "turn-display turn-current"] []
+            , div [id "turn-noughts", class "turn-display"] []
+            ]
+        O ->
+            [ div [id "turn-crosses", class "turn-display"] []
+            , div [id "turn-noughts", class "turn-display turn-current"] []
+            ]
+
+renderSelectBoard : Size -> GameType -> Html Msg
+renderSelectBoard currentBoardSize currentGameType =
+    sizesAvailable
+        |> List.map (\aBoardSize -> (buildOption currentBoardSize aBoardSize))
+        |> select [onInput (fooCHANGEMYNAMECHANGEMYNAMEPLEASE currentGameType)]
+
+fooCHANGEMYNAMECHANGEMYNAMEPLEASE : GameType -> String -> Msg
+fooCHANGEMYNAMECHANGEMYNAMEPLEASE currentGameType boardSizeAsString =
+    NewGame (sizeFromString boardSizeAsString) currentGameType
 
 renderSelectNewGame : Size -> GameType -> Html Msg
 renderSelectNewGame boardSize currentGameType =
@@ -101,12 +138,12 @@ generateNewGameMsg : Size -> String -> Msg
 generateNewGameMsg boardSize gameTypeAsString =
     NewGame boardSize (gameTypeFromString gameTypeAsString)
 
-buildOption : GameType -> GameType -> Html Msg
-buildOption currentGameType aGameType =
+buildOption : a -> a -> Html Msg
+buildOption optionToSelect currentOption =
     let
-        typeAsString = toString aGameType
+        typeAsString = toString currentOption
     in
-        if (aGameType == currentGameType) then
+        if (currentOption == optionToSelect) then
             option [value typeAsString, selected True] [text typeAsString]
         else
             option [value typeAsString] [text typeAsString]
