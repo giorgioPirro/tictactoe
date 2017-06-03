@@ -54,3 +54,13 @@ table td {
     background-repeat: space;
     animation: scrollLeft 0.7s;
 }
+
+.turn-display {
+  width: 50px;
+  height: 25px;
+  background-color: grey;
+}
+
+.turn-current {
+  background-color: blue;
+}
