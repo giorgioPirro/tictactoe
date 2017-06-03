@@ -1,6 +1,7 @@
 module Board exposing (Size(..), Mark(..), Cell, Board, Position, Move, create, markCell,
                        rows, rowsWithPositions, isFull, isPositionAvailable,
-                       winningMark, positionsAvailable, size, toList, toArray)
+                       winningMark, positionsAvailable, size, sizesAvailable,
+                       toList, toArray)
 
 import Array exposing (Array)
 import Set
@@ -99,6 +100,10 @@ size board =
     case (width board) of
         3 -> Standard
         _ -> Large
+
+sizesAvailable : List Size
+sizesAvailable =
+    [Standard, Large]
 
 positionsAvailable : Board -> List Position
 positionsAvailable board =
