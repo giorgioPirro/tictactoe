@@ -86,7 +86,7 @@ view {game} =
         status = Game.status game
         whoseTurn = Game.whoseTurn game
     in
-        div []
+        div [class "main-container"]
             [ renderWhoseTurn whoseTurn
             , renderBoard status whoseTurn board
             , renderResetButton game

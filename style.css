@@ -9,11 +9,14 @@
 }
 
 body {
-    background-color: #14bdac;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 table {
-		margin: 20px;
+		margin: 30px;
     border-collapse: collapse;
     border-style: hidden;
     width: 600px;
@@ -23,6 +26,20 @@ table {
 table td {
     border: 10px solid #0da192;
 		border-radius: 5px;
+}
+
+.main-container {
+    background-color: #f8f8f8;
+    width: 1000px;
+    height: 1000px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px #888888;
+}
+
+.board-container {
+    background-color: #14bdac;
+    display: flex;
+    justify-content: center;
 }
 
 .cell {

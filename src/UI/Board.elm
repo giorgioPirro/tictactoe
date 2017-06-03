@@ -1,6 +1,6 @@
 module UI.Board exposing (renderBoard)
 
-import Html exposing (Html, Attribute, table, tr, td)
+import Html exposing (Html, Attribute, div, table, tr, td)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
@@ -10,10 +10,15 @@ import Board exposing (Board, Position, Cell, Mark(..))
 
 renderBoard : Status -> Maybe Player -> Board -> Html Msg
 renderBoard status currentPlayer board =
-    board
-        |> Board.rowsWithPositions
-        |> List.map (renderRow status)
-        |> table [class "board"]
+    let
+        renderedBoard =
+          board
+            |> Board.rowsWithPositions
+            |> List.map (renderRow status)
+            |> table [class "board"]
+    in
+        div [class "board-container"] [renderedBoard]
+
 
 renderRow : Status -> List (Position, Cell) -> Html Msg
 renderRow status row =
