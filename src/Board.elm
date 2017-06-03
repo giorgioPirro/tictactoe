@@ -1,7 +1,7 @@
 module Board exposing (Size(..), Mark(..), Cell, Board, Position, Move, create, markCell,
                        rows, rowsWithPositions, isFull, isPositionAvailable,
                        winningMark, positionsAvailable, size, sizesAvailable,
-                       toList, toArray)
+                       sizeFromString, toList, toArray)
 
 import Array exposing (Array)
 import Set
@@ -111,6 +111,14 @@ positionsAvailable board =
         |> List.indexedMap (,)
         |> List.filter (\(index,cell) -> cell == Nothing)
         |> List.map (\(index,cell) -> index)
+
+sizeFromString : String -> Size
+sizeFromString boardSize =
+    case boardSize of
+        "Standard" ->
+            Standard
+        _ ->
+            Large
 
 toList : Board -> List Cell
 toList (Board marks) =
