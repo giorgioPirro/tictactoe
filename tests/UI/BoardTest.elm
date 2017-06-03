@@ -13,7 +13,8 @@ import Helpers exposing (standardBoardXwinsHorizontally, randomGameStatus,
 
 import Board exposing (Size(..), Mark(..))
 import Game exposing (Status(..), Player(..))
-import Main exposing (Msg(..), renderBoard)
+import Msg exposing (Msg(..))
+import UI.Board exposing (renderBoard)
 
 defaultBoardRenderingTests : Test
 defaultBoardRenderingTests =

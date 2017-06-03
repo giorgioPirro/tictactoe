@@ -6,7 +6,9 @@ import Task exposing (Task)
 
 import Helpers exposing (createNewGame)
 
-import Main exposing (Msg(..), Model, update)
+
+import Msg exposing (Msg(..))
+import Main exposing (Model, update)
 import Board exposing (Mark(..), Size(..))
 import Game exposing (Player(..))
 

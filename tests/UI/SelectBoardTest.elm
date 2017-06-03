@@ -8,7 +8,8 @@ import Test.Html.Event as Event exposing (click)
 
 import Helpers exposing (randomGameType, randomBoardSize)
 
-import Main exposing (Msg(..), renderSelectBoard)
+import Msg exposing (Msg(..))
+import Main exposing (renderSelectBoard)
 import Board exposing (Mark(..), Size(..))
 import Game exposing (Player(..))
 import GameGenerator exposing (GameType(..))

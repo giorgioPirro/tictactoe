@@ -5,7 +5,8 @@ import Expect
 import Test.Html.Query as Query
 import Test.Html.Event as Event exposing (click)
 
-import Main exposing (Msg(..), renderResetButton)
+import Msg exposing (Msg(..))
+import Main exposing (renderResetButton)
 import Helpers exposing (createNewGame, createTieGameStandardSizedBoard)
 import Board exposing (Size(..), Mark(..))
 import Game exposing (Player(..))
