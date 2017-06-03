@@ -98,6 +98,19 @@ inPlayBoardRenderingTests =
                           |> Event.simulate click
                           |> Event.toResult
                           |> Expect.notEqual (Ok (MakeMove 0))
+
+            , test "not including move events for cells if Computer player is next" <|
+                  \() ->
+                      Board.create Standard
+                          |> renderBoard Ongoing (Just (Computer O))
+                          |> Query.fromHtml
+                          |> Query.findAll [class "row"]
+                          |> Query.index 0
+                          |> Query.findAll [class "cell"]
+                          |> Query.index 0
+                          |> Event.simulate click
+                          |> Event.toResult
+                          |> Expect.notEqual (Ok (MakeMove 0))
             ]
         ]
 

@@ -14,36 +14,42 @@ renderBoard status currentPlayer board =
         renderedBoard =
           board
             |> Board.rowsWithPositions
-            |> List.map (renderRow status)
+            |> List.map (renderRow status currentPlayer)
             |> table [class "board"]
     in
         div [class "board-container"] [renderedBoard]
 
 
-renderRow : Status -> List (Position, Cell) -> Html Msg
-renderRow status row =
+renderRow : Status -> Maybe Player -> List (Position, Cell) -> Html Msg
+renderRow status currentPlayer row =
     row
-        |> List.map (renderCell status)
+        |> List.map (renderCell status currentPlayer)
         |> tr [class "row"]
 
-renderCell : Status -> (Position, Cell) -> Html Msg
-renderCell status indexedCell =
-        td (buildCellAttributes status indexedCell) []
+renderCell : Status -> Maybe Player -> (Position, Cell) -> Html Msg
+renderCell status currentPlayer indexedCell =
+        td (buildCellAttributes status currentPlayer indexedCell) []
 
-buildCellAttributes : Status -> (Position, Cell) -> List (Attribute Msg)
-buildCellAttributes status (position, cell) =
+buildCellAttributes : Status -> Maybe Player -> (Position, Cell) -> List (Attribute Msg)
+buildCellAttributes status currentPlayer (position, cell) =
     let
         event = (clickEvent position cell)
         klass = class (cellClass cell)
     in
-        if (cellShouldHaveMoveEvent status cell) then
+        if (cellShouldHaveMoveEvent status cell currentPlayer) then
             [klass] ++ [event]
         else
             [klass]
 
-cellShouldHaveMoveEvent : Status -> Cell -> Bool
-cellShouldHaveMoveEvent status cell =
-    (cell == Nothing) && (not (Game.gameIsOver status))
+cellShouldHaveMoveEvent : Status -> Cell -> Maybe Player -> Bool
+cellShouldHaveMoveEvent status cell currentPlayer =
+    case currentPlayer of
+        Nothing ->
+            False
+        Just (Human _) ->
+            (cell == Nothing) && (not (Game.gameIsOver status))
+        Just (Computer _) ->
+            False
 
 clickEvent : Position -> Cell -> Attribute Msg
 clickEvent position cell =
