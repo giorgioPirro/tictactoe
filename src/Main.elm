@@ -5,6 +5,8 @@ import Html exposing (Html, Attribute, div, text, table, tr, td, p, button,
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Task
+import Time
+import Process
 
 import Msg exposing (Msg(..))
 import UI.Board exposing (renderBoard)
@@ -69,7 +71,8 @@ computerMove game =
     in
         case chosenPosition of
             Just position ->
-                Task.perform MakeMove (Task.succeed position)
+                Process.sleep (300 * Time.millisecond)
+                    |> Task.perform (\() -> MakeMove position)
             Nothing ->
                 Cmd.none
 
