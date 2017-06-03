@@ -5,7 +5,8 @@ import Expect
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (class, text)
 
-import Main exposing (renderGameStatus)
+import Msg exposing (Msg(..))
+import UI.GameOutcome exposing (renderGameOutcome)
 import Game exposing (Status(..))
 import Board exposing (Mark(..))
 
@@ -15,7 +16,7 @@ outcomeTests =
      [ describe "when the game is ongoing"
          [ test "does not show anything" <|
                \() ->
-                   renderGameStatus Ongoing
+                   renderGameOutcome Ongoing
                        |> Query.fromHtml
                        |> Query.children [class "outcome-message"]
                        |> Query.count (Expect.equal 0)
@@ -24,7 +25,7 @@ outcomeTests =
      , describe "when the game has come to a tie"
          [ test "displays the appropriate tie message" <|
                \() ->
-                   renderGameStatus Tie
+                   renderGameOutcome Tie
                        |> Query.fromHtml
                        |> Query.find [class "outcome-message"]
                        |> Query.has [text "It was a tie!!"]
@@ -33,14 +34,14 @@ outcomeTests =
      , describe "when there is a winner"
          [ test "displays the appropriate tie message (X)" <|
                \() ->
-                   renderGameStatus (Win X)
+                   renderGameOutcome (Win X)
                        |> Query.fromHtml
                        |> Query.find [class "outcome-message"]
                        |> Query.has [text "X has won!!"]
 
          , test "displays the appropriate tie message (O)" <|
                \() ->
-                   renderGameStatus (Win O)
+                   renderGameOutcome (Win O)
                        |> Query.fromHtml
                        |> Query.find [class "outcome-message"]
                        |> Query.has [text "O has won!!"]

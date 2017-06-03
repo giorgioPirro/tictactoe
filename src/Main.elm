@@ -1,4 +1,4 @@
-module Main exposing (Model, renderGameStatus,
+module Main exposing (Model,
                       renderSelectNewGame, renderSelectBoard,
                       renderWhoseTurn, update)
 
@@ -11,6 +11,7 @@ import Task
 import Msg exposing (Msg(..))
 import UI.Board exposing (renderBoard)
 import UI.ResetButton exposing (renderResetButton)
+import UI.GameOutcome exposing (renderGameOutcome)
 import Board exposing (Board, Mark(..), Size(..), Position, Cell, size, sizesAvailable,
                        sizeFromString)
 import Game exposing (Status(..), Player(..), Game)
@@ -91,7 +92,7 @@ view {game} =
             , renderResetButton game
             , renderSelectNewGame size gameType
             , renderSelectBoard size gameType
-            , renderGameStatus status
+            , renderGameOutcome status
             ]
 
 renderWhoseTurn : Maybe Player -> Html Msg
@@ -146,16 +147,3 @@ buildOption optionToSelect currentOption =
             option [value typeAsString, selected True] [text typeAsString]
         else
             option [value typeAsString] [text typeAsString]
-
-renderGameStatus : Status -> Html Msg
-renderGameStatus status =
-    case status of
-        Ongoing ->
-            div [class "outcome-box"]
-                []
-        Tie ->
-            div [class "outcome-box"]
-                [p [class "outcome-message"] [text "It was a tie!!"]]
-        Win mark ->
-            div [class "outcome-box"]
-                [p [class "outcome-message"] [text ((toString mark) ++ " has won!!")]]
