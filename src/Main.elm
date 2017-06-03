@@ -81,16 +81,26 @@ view : Model -> Html Msg
 view {game} =
     let
         board = Game.getBoard game
-        size = Board.size board
-        gameType = GameGenerator.whichGameType (Game.getPlayers game)
         status = Game.status game
         whoseTurn = Game.whoseTurn game
     in
         div [class "main-container"]
-            [ renderWhoseTurn whoseTurn
+            [ renderGameSelection game
             , renderBoard status whoseTurn board
-            , renderResetButton game
-            , renderSelectNewGame size gameType
-            , renderSelectNewBoard size gameType
+            , renderWhoseTurn whoseTurn
             , renderGameOutcome status
+            ]
+
+renderGameSelection : Game -> Html Msg
+renderGameSelection game =
+    let
+        board = Game.getBoard game
+        size = Board.size board
+        gameType = GameGenerator.whichGameType (Game.getPlayers game)
+    in
+        div [class "new-game-container"]
+            [ div [] [ renderSelectNewGame size gameType
+                     , renderSelectNewBoard size gameType
+                     ]
+            , renderResetButton game
             ]
