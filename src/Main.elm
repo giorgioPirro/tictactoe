@@ -1,5 +1,4 @@
 module Main exposing (Model,
-                      renderSelectNewGame, renderSelectBoard,
                       renderWhoseTurn, update)
 
 import Html exposing (Html, Attribute, div, text, table, tr, td, p, button,
@@ -12,6 +11,7 @@ import Msg exposing (Msg(..))
 import UI.Board exposing (renderBoard)
 import UI.ResetButton exposing (renderResetButton)
 import UI.GameOutcome exposing (renderGameOutcome)
+import UI.SelectNewGame exposing (renderSelectNewGame, renderSelectNewBoard)
 import Board exposing (Board, Mark(..), Size(..), Position, Cell, size, sizesAvailable,
                        sizeFromString)
 import Game exposing (Status(..), Player(..), Game)
@@ -91,7 +91,7 @@ view {game} =
             , renderBoard status whoseTurn board
             , renderResetButton game
             , renderSelectNewGame size gameType
-            , renderSelectBoard size gameType
+            , renderSelectNewBoard size gameType
             , renderGameOutcome status
             ]
 
@@ -117,33 +117,3 @@ buildTurnBoxes mark =
             [ div [id "turn-crosses", class "turn-display"] []
             , div [id "turn-noughts", class "turn-display turn-current"] []
             ]
-
-renderSelectBoard : Size -> GameType -> Html Msg
-renderSelectBoard currentBoardSize currentGameType =
-    sizesAvailable
-        |> List.map (\aBoardSize -> (buildOption currentBoardSize aBoardSize))
-        |> select [onInput (fooCHANGEMYNAMECHANGEMYNAMEPLEASE currentGameType)]
-
-fooCHANGEMYNAMECHANGEMYNAMEPLEASE : GameType -> String -> Msg
-fooCHANGEMYNAMECHANGEMYNAMEPLEASE currentGameType boardSizeAsString =
-    NewGame (sizeFromString boardSizeAsString) currentGameType
-
-renderSelectNewGame : Size -> GameType -> Html Msg
-renderSelectNewGame boardSize currentGameType =
-    gameTypes
-        |> List.map (\aGameType -> (buildOption currentGameType aGameType))
-        |> select [onInput (generateNewGameMsg boardSize)]
-
-generateNewGameMsg : Size -> String -> Msg
-generateNewGameMsg boardSize gameTypeAsString =
-    NewGame boardSize (gameTypeFromString gameTypeAsString)
-
-buildOption : a -> a -> Html Msg
-buildOption optionToSelect currentOption =
-    let
-        typeAsString = toString currentOption
-    in
-        if (currentOption == optionToSelect) then
-            option [value typeAsString, selected True] [text typeAsString]
-        else
-            option [value typeAsString] [text typeAsString]
