@@ -1,5 +1,4 @@
-module Main exposing (Model,
-                      renderWhoseTurn, update)
+module Main exposing (Model, update)
 
 import Html exposing (Html, Attribute, div, text, table, tr, td, p, button,
                       select, option)
@@ -12,6 +11,7 @@ import UI.Board exposing (renderBoard)
 import UI.ResetButton exposing (renderResetButton)
 import UI.GameOutcome exposing (renderGameOutcome)
 import UI.SelectNewGame exposing (renderSelectNewGame, renderSelectNewBoard)
+import UI.WhoseTurn exposing (renderWhoseTurn)
 import Board exposing (Board, Mark(..), Size(..), Position, Cell, size, sizesAvailable,
                        sizeFromString)
 import Game exposing (Status(..), Player(..), Game)
@@ -93,27 +93,4 @@ view {game} =
             , renderSelectNewGame size gameType
             , renderSelectNewBoard size gameType
             , renderGameOutcome status
-            ]
-
-renderWhoseTurn : Maybe Player -> Html Msg
-renderWhoseTurn player =
-    case player of
-        Nothing ->
-            div []
-                [ div [id "turn-crosses", class "turn-display"] []
-                , div [id "turn-noughts", class "turn-display"] []
-                ]
-        Just player ->
-            div [] (buildTurnBoxes (Game.extractMark player))
-
-buildTurnBoxes : Mark -> List (Html Msg)
-buildTurnBoxes mark =
-    case mark of
-        X ->
-            [ div [id "turn-crosses", class "turn-display turn-current"] []
-            , div [id "turn-noughts", class "turn-display"] []
-            ]
-        O ->
-            [ div [id "turn-crosses", class "turn-display"] []
-            , div [id "turn-noughts", class "turn-display turn-current"] []
             ]

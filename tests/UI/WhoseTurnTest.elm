@@ -5,7 +5,7 @@ import Expect
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (class, id)
 
-import Main exposing (renderWhoseTurn)
+import UI.WhoseTurn exposing (renderWhoseTurn)
 import Game exposing (Player(..))
 import Board exposing (Mark(..))
 
