@@ -1,11 +1,6 @@
-@keyframes scrollRight {
-    from { background-position: -200px 0; }
-    to { background-position: 0 0; }
-}
-
-@keyframes scrollLeft {
-    from { background-position: 0 -200px; }
-    to { background-position: 0 0; }
+@keyframes appear {
+    from { transform: scale(0.7,0.7); }
+    to { transform: scale(1,1); }
 }
 
 body {
@@ -13,6 +8,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    font-family: sans-serif;
 }
 
 table {
@@ -24,7 +20,7 @@ table {
 }
 
 table td {
-    border: 10px solid #0da192;
+    border: 10px solid #c25a30;
 		border-radius: 5px;
 }
 
@@ -32,6 +28,7 @@ select {
     text-align: center;
     border: 0;
     -webkit-appearance: none;
+    background-color: transparent;
     font-size: 1.2em;
     color: grey;
 		margin: 0px 10px;
@@ -39,13 +36,13 @@ select {
 
 button {
     border: 0;
-    background-color: #f8f8f8;
+    background-color: transparent;
     font-size: 1.2em;
     color: grey;
 }
 
 button:hover, select:hover {
-    transition: color 0.6s;
+    transition: color 0.3s;
     color: black;
 }
 
@@ -54,9 +51,8 @@ button:focus, select:focus {
 }
 
 .main-container {
-    background-color: #f8f8f8;
+    background-color: #f2f2f2;
     width: 1000px;
-    height: 1000px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px #888888;
 }
@@ -69,16 +65,20 @@ button:focus, select:focus {
 }
 
 .board-container {
-    background-color: #14bdac;
+    background-color: #e16938;
     display: flex;
     justify-content: center;
+}
+
+.turn-container {
+    display: flex;
+    justify-content: space-around;
 }
 
 .cell {
     width: 150px;
     height: 150px;
     background-size: cover;
-
 }
 
 .cell.empty {
@@ -92,7 +92,7 @@ button:focus, select:focus {
 
     background-position: 0px 0px;
     background-repeat: space;
-    animation: scrollRight 0.7s;
+    animation: appear 0.5s;
 }
 
 .cell.noughts {
@@ -101,15 +101,41 @@ button:focus, select:focus {
 
     background-position: 0px 0px;
     background-repeat: space;
-    animation: scrollLeft 0.7s;
+    animation: appear 0.5s;
 }
 
 .turn-display {
-  width: 50px;
-  height: 25px;
-  background-color: grey;
+    width: 80px;
+    height: 80px;
+		margin: 50px;
+    background-color: transparent;
+    background-size: cover;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.outcome-box {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100px;
+    font-size: 2.5em;
+    color: grey;
+}
+
+.outcome-message {
+    animation: appear 0.5s;
 }
 
 .turn-current {
-  background-color: blue;
+    background-color: #c25a30;
+    box-shadow: 0 0 10px 15px #c25a30;
+    border-radius: 10px;
+}
+
+#turn-crosses {
+    background-image:url("https://cdn.pixabay.com/photo/2014/09/26/10/45/delete-462216_640.png");
+}
+
+#turn-noughts {
+    background-image:url("http://www.emoji.co.uk/files/microsoft-emojis/symbols-windows10/10295-medium-white-circle.png");
 }

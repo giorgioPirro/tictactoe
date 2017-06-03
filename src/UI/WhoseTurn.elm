@@ -11,12 +11,12 @@ renderWhoseTurn : Maybe Player -> Html Msg
 renderWhoseTurn player =
     case player of
         Nothing ->
-            div []
+            div [class "turn-container"]
                 [ div [id "turn-crosses", class "turn-display"] []
                 , div [id "turn-noughts", class "turn-display"] []
                 ]
         Just player ->
-            div [] (buildTurnBoxes (Game.extractMark player))
+            div [class "turn-container"] (buildTurnBoxes (Game.extractMark player))
 
 buildTurnBoxes : Mark -> List (Html Msg)
 buildTurnBoxes mark =
