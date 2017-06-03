@@ -1,5 +1,5 @@
 module Main exposing (Model, renderGameStatus,
-                      renderResetButton, renderSelectNewGame, renderSelectBoard,
+                      renderSelectNewGame, renderSelectBoard,
                       renderWhoseTurn, update)
 
 import Html exposing (Html, Attribute, div, text, table, tr, td, p, button,
@@ -10,6 +10,7 @@ import Task
 
 import Msg exposing (Msg(..))
 import UI.Board exposing (renderBoard)
+import UI.ResetButton exposing (renderResetButton)
 import Board exposing (Board, Mark(..), Size(..), Position, Cell, size, sizesAvailable,
                        sizeFromString)
 import Game exposing (Status(..), Player(..), Game)
@@ -145,13 +146,6 @@ buildOption optionToSelect currentOption =
             option [value typeAsString, selected True] [text typeAsString]
         else
             option [value typeAsString] [text typeAsString]
-
-renderResetButton : Game -> Html Msg
-renderResetButton {players, board} =
-    let
-        boardSize = (Board.size board)
-    in
-        button [onClick (NewGame boardSize (whichGameType players))] [text "Reset"]
 
 renderGameStatus : Status -> Html Msg
 renderGameStatus status =

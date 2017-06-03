@@ -6,7 +6,7 @@ import Test.Html.Query as Query
 import Test.Html.Event as Event exposing (click)
 
 import Msg exposing (Msg(..))
-import Main exposing (renderResetButton)
+import UI.ResetButton exposing (renderResetButton)
 import Helpers exposing (createNewGame, createTieGameStandardSizedBoard)
 import Board exposing (Size(..), Mark(..))
 import Game exposing (Player(..))
