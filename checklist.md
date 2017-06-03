@@ -8,6 +8,8 @@
 [ ] - Add fuzzy testing where possible/appropriate
 [ ] - Move custom fuzzer for Game status into helper
 [ ] - add favicon
+[ ] - add integration test/s?
+[ ] - deal with reset button (should not be available when game is Ongoing)
 
 
 
