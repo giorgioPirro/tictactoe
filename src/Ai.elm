@@ -24,7 +24,7 @@ rateMove game maximisingMark depth position =
     let
         gameAfterMove = Game.makeMove position game
     in
-        if (Game.gameIsOver (Game.status gameAfterMove)) then
+        if ((Game.gameIsOver (Game.status gameAfterMove)) || (depth > 4)) then
             rateGameOutcome gameAfterMove maximisingMark depth
         else
             rateOngoingGame gameAfterMove maximisingMark (depth + 1)
