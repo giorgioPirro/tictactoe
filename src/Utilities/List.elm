@@ -1,5 +1,5 @@
 module Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual,
-                                transpose, getAt, chunkify)
+                                transpose, getAt, chunkify, maximumBy)
 
 removeWhen : (a -> Bool) -> List a -> List a
 removeWhen predicate list =
@@ -60,3 +60,10 @@ chunkify chunkSize list =
         [] -> []
         chunk -> chunk :: (chunkify chunkSize (List.drop chunkSize list))
 
+maximumBy : (a -> comparable) -> List a -> Maybe a
+maximumBy f list =
+    let
+        maxValue = List.map f list
+        gigi = List.maximum maxValue
+    in
+        findFirstWhere (\item -> (Just (f item)) == gigi) list

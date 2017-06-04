@@ -6,10 +6,12 @@ import Utilities.List exposing (maximumBy)
 
 type alias Score = Int
 type alias Depth = Int
+type alias Alpha = Int
+type alias Beta = Int
 
 pickBestPosition : Game -> Maybe Position
 pickBestPosition game =
-    if ((List.length (Game.positionsAvailable game)) > 8) then
+    if ((List.length (Game.positionsAvailable game)) > 11) then
         List.head (Game.positionsAvailable game)
     else
       case (Game.whoseTurn game) of
@@ -17,20 +19,20 @@ pickBestPosition game =
               Nothing
           Just player ->
               Game.positionsAvailable game
-                  |> maximumBy (rateMove game (Game.extractMark player) 0)
+                  |> maximumBy (rateMove game (Game.extractMark player) 0 -999999 999999)
 
-rateMove : Game -> Mark -> Depth -> Position -> Score
-rateMove game maximisingMark depth position =
+rateMove : Game -> Mark -> Depth -> Alpha -> Beta -> Position -> Score
+rateMove game maximisingMark depth alpha beta position =
     let
         gameAfterMove = Game.makeMove position game
     in
         if ((Game.gameIsOver (Game.status gameAfterMove)) || (depth > 4)) then
             rateGameOutcome gameAfterMove maximisingMark depth
         else
-            rateOngoingGame gameAfterMove maximisingMark (depth + 1)
+            rateOngoingGame gameAfterMove maximisingMark (depth + 1) alpha beta
 
-rateOngoingGame : Game -> Mark -> Depth -> Score
-rateOngoingGame game maximisingMark depth =
+rateOngoingGame : Game -> Mark -> Depth -> Alpha -> Beta -> Score
+rateOngoingGame game maximisingMark depth alpha beta =
     let
         currentPlayer = Game.whoseTurn game
     in
@@ -39,13 +41,31 @@ rateOngoingGame game maximisingMark depth =
                 0
             Just player ->
                 if (Game.extractMark player == maximisingMark) then
-                    Game.positionsAvailable game
-                      |> List.map (rateMove game maximisingMark depth)
-                      |> getMaximumOrZero
+                    alphaBetaMaxReduce (rateMove game maximisingMark depth alpha beta) -999999 maximisingMark depth alpha beta (Game.positionsAvailable game) game
                 else
-                    Game.positionsAvailable game
-                      |> List.map (rateMove game maximisingMark depth)
-                      |> getMinimumOrZero
+                    alphaBetaMinReduce (rateMove game maximisingMark depth alpha beta) 999999 maximisingMark depth alpha beta (Game.positionsAvailable game) game
+
+alphaBetaMaxReduce : (Position -> Score) -> Score -> Mark -> Depth -> Alpha -> Beta -> List Position -> Game -> Score
+alphaBetaMaxReduce f bestScoreSoFar maximisingMark depth alpha beta positionsAvailable game =
+    case positionsAvailable of
+        [] ->
+            bestScoreSoFar
+        position::otherPositions ->
+            if (beta <= alpha) then
+                bestScoreSoFar
+            else
+                alphaBetaMaxReduce f (max bestScoreSoFar (rateMove game maximisingMark (depth + 1) alpha beta position)) maximisingMark depth (max bestScoreSoFar alpha) beta otherPositions game
+
+alphaBetaMinReduce : (Position -> Score) -> Score -> Mark -> Depth -> Alpha -> Beta -> List Position -> Game -> Score
+alphaBetaMinReduce f bestScoreSoFar maximisingMark depth alpha beta positionsAvailable game =
+    case positionsAvailable of
+        [] ->
+            bestScoreSoFar
+        position::otherPositions ->
+            if (beta <= alpha) then
+                bestScoreSoFar
+            else
+                alphaBetaMinReduce f (min bestScoreSoFar (rateMove game maximisingMark (depth + 1) alpha beta position)) maximisingMark depth alpha (min bestScoreSoFar beta) otherPositions game
 
 rateGameOutcome : Game -> Mark -> Depth -> Score
 rateGameOutcome game maximisingMark depth =
