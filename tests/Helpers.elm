@@ -1,10 +1,12 @@
-module Helpers exposing (createNewGame, createTieGameStandardSizedBoard,
+module Helpers exposing (createNewGame, createTieGameStandardSizedBoard, createGameXCanWin,
                          createXwinGameStandardSizedBoard, createOwinGameStandardSizedBoard,
                          createDrawBoardStandardSized, standardBoardXwinsHorizontally,
                          standardBoardOwinsHorizontally, standardBoardXwinsVertically,
                          standardBoardOwinsVertically, standardBoardXwinsDownDiagonal,
                          standardBoardOwinsUpDiagonal, randomGameStatus,
-                         randomGameOverStatus, randomGameType, randomBoardSize)
+                         randomGameOverStatus, randomGameType, randomBoardSize,
+                         createGameOCanAvoidLoss, createGameXCanBlockFork,
+                         createGameOCanBlockFork)
 
 import Random.Pcg
 import Fuzz
@@ -18,10 +20,41 @@ createNewGame : Size -> (Player, Player) -> Game
 createNewGame size players =
     Game.create players (Board.create size)
 
-
 addMovesToBoard : List (Int, Mark) -> Board -> Board
 addMovesToBoard moves board =
         List.foldl Board.markCell board moves
+
+createGameXCanWin : Game
+createGameXCanWin =
+    let
+        newGame = Game.create (Human X, Human O) (Board.create Standard)
+        moves = [0, 3, 1, 4]
+    in
+        List.foldl Game.makeMove newGame moves
+
+createGameOCanAvoidLoss : Game
+createGameOCanAvoidLoss =
+    let
+        newGame = Game.create (Human X, Human O) (Board.create Standard)
+        moves = [0, 3, 1]
+    in
+        List.foldl Game.makeMove newGame moves
+
+createGameXCanBlockFork : Game
+createGameXCanBlockFork =
+    let
+        newGame = Game.create (Human O, Human X) (Board.create Standard)
+        moves = [4, 2, 6]
+    in
+        List.foldl Game.makeMove newGame moves
+
+createGameOCanBlockFork : Game
+createGameOCanBlockFork =
+    let
+        newGame = Game.create (Human X, Human O) (Board.create Standard)
+        moves = [8, 4, 0]
+    in
+        List.foldl Game.makeMove newGame moves
 
 createTieGameStandardSizedBoard : Game
 createTieGameStandardSizedBoard =
