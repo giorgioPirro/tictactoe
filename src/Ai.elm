@@ -11,7 +11,7 @@ type alias Beta = Int
 
 pickBestPosition : Game -> Maybe Position
 pickBestPosition game =
-    if ((List.length (Game.positionsAvailable game)) > 11) then
+    if ((List.length (Game.positionsAvailable game)) > 8) then
         List.head (Game.positionsAvailable game)
     else
       case (Game.whoseTurn game) of
@@ -54,7 +54,7 @@ alphaBetaMaxReduce f bestScoreSoFar maximisingMark depth alpha beta positionsAva
             if (beta <= alpha) then
                 bestScoreSoFar
             else
-                alphaBetaMaxReduce f (max bestScoreSoFar (rateMove game maximisingMark (depth + 1) alpha beta position)) maximisingMark depth (max bestScoreSoFar alpha) beta otherPositions game
+                alphaBetaMaxReduce f (max bestScoreSoFar (rateMove game maximisingMark depth alpha beta position)) maximisingMark depth (max bestScoreSoFar alpha) beta otherPositions game
 
 alphaBetaMinReduce : (Position -> Score) -> Score -> Mark -> Depth -> Alpha -> Beta -> List Position -> Game -> Score
 alphaBetaMinReduce f bestScoreSoFar maximisingMark depth alpha beta positionsAvailable game =
@@ -65,7 +65,7 @@ alphaBetaMinReduce f bestScoreSoFar maximisingMark depth alpha beta positionsAva
             if (beta <= alpha) then
                 bestScoreSoFar
             else
-                alphaBetaMinReduce f (min bestScoreSoFar (rateMove game maximisingMark (depth + 1) alpha beta position)) maximisingMark depth alpha (min bestScoreSoFar beta) otherPositions game
+                alphaBetaMinReduce f (min bestScoreSoFar (rateMove game maximisingMark depth alpha beta position)) maximisingMark depth alpha (min bestScoreSoFar beta) otherPositions game
 
 rateGameOutcome : Game -> Mark -> Depth -> Score
 rateGameOutcome game maximisingMark depth =

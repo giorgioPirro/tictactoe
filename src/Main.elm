@@ -66,15 +66,16 @@ modelWithMessage newGame =
 
 computerMove : Game -> Cmd Msg
 computerMove game =
-    let
-        chosenPosition = Ai.pickBestPosition game
-    in
-        case chosenPosition of
-            Just position ->
-                Process.sleep (300 * Time.millisecond)
-                    |> Task.perform (\() -> MakeMove position)
-            Nothing ->
-                Cmd.none
+        Process.sleep (200 * Time.millisecond)
+            |> Task.perform (\() -> getMoveFromAi game)
+
+getMoveFromAi : Game -> Msg
+getMoveFromAi game =
+    case (Ai.pickBestPosition game) of
+        Nothing ->
+            MakeMove 0
+        Just position ->
+           MakeMove position
 
 
 -- VIEW
