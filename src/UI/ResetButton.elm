@@ -4,7 +4,7 @@ import Html exposing (Html, div, button, text)
 import Html.Events exposing (onClick)
 
 import Msg exposing (Msg(..))
-import Board exposing (Size(..))
+import Board exposing (Size)
 import Game exposing (Status(..))
 import GameGenerator exposing (GameType)
 
@@ -14,6 +14,4 @@ renderResetButton boardSize gameType gameStatus =
         Ongoing ->
             div [] []
         _ ->
-            div []
-                [ button [onClick (NewGame boardSize gameType)] [text "Reset"]
-                ]
+            div [] [button [onClick (NewGame boardSize gameType)] [text "Reset"]]
