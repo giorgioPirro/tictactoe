@@ -9,17 +9,18 @@ import Game exposing (Status(..))
 import Player exposing (Player(..))
 import Board exposing (Board, Position, Cell, Mark(..))
 
+type alias IndexedCell = (Position, Cell)
+
 renderBoard : Status -> Maybe Player -> Board -> Html Msg
 renderBoard status currentPlayer board =
     let
         renderedBoard =
-          board
-            |> Board.rowsWithPositions
-            |> List.map (renderRow status currentPlayer)
-            |> table [class "board"]
+            board
+              |> Board.rowsWithPositions
+              |> List.map (renderRow status currentPlayer)
+              |> table [class "board"]
     in
         div [class "board-container"] [renderedBoard]
-
 
 renderRow : Status -> Maybe Player -> List (Position, Cell) -> Html Msg
 renderRow status currentPlayer row =
@@ -27,11 +28,11 @@ renderRow status currentPlayer row =
         |> List.map (renderCell status currentPlayer)
         |> tr [class "row"]
 
-renderCell : Status -> Maybe Player -> (Position, Cell) -> Html Msg
+renderCell : Status -> Maybe Player -> IndexedCell -> Html Msg
 renderCell status currentPlayer indexedCell =
         td (buildCellAttributes status currentPlayer indexedCell) []
 
-buildCellAttributes : Status -> Maybe Player -> (Position, Cell) -> List (Attribute Msg)
+buildCellAttributes : Status -> Maybe Player -> IndexedCell -> List (Attribute Msg)
 buildCellAttributes status currentPlayer (position, cell) =
     let
         event = (clickEvent position cell)
@@ -41,16 +42,6 @@ buildCellAttributes status currentPlayer (position, cell) =
             [klass] ++ [event]
         else
             [klass]
-
-cellShouldHaveMoveEvent : Status -> Cell -> Maybe Player -> Bool
-cellShouldHaveMoveEvent status cell currentPlayer =
-    case currentPlayer of
-        Nothing ->
-            False
-        Just (Human _) ->
-            (cell == Nothing) && (not (Game.gameIsOver status))
-        Just (Computer _) ->
-            False
 
 clickEvent : Position -> Cell -> Attribute Msg
 clickEvent position cell =
@@ -62,3 +53,13 @@ cellClass cell =
         (Just O) -> "cell noughts"
         (Just X) -> "cell crosses"
         Nothing  -> "cell empty"
+
+cellShouldHaveMoveEvent : Status -> Cell -> Maybe Player -> Bool
+cellShouldHaveMoveEvent status cell currentPlayer =
+    case currentPlayer of
+        Nothing ->
+            False
+        Just (Human _) ->
+            (cell == Nothing) && (not (Game.gameIsOver status))
+        Just (Computer _) ->
+            False
