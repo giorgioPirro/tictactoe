@@ -1,9 +1,7 @@
 module Main exposing (Model, update)
 
-import Html exposing (Html, Attribute, div, text, table, tr, td, p, button,
-                      select, option)
+import Html exposing (Html, Attribute, div)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput)
 import Task
 import Time
 import Process
@@ -14,12 +12,10 @@ import UI.ResetButton exposing (renderResetButton)
 import UI.GameOutcome exposing (renderGameOutcome)
 import UI.SelectNewGame exposing (renderSelectNewGame, renderSelectNewBoard)
 import UI.WhoseTurn exposing (renderWhoseTurn)
-import Board exposing (Board, Mark(..), Size(..), Position, Cell, size, sizesAvailable,
-                       sizeFromString)
-import Game exposing (Status(..), Game)
+import Board exposing (Size(..))
+import Game exposing (Game, Status(..))
 import Player exposing (Player(..))
-import GameGenerator exposing (GameType(..), gameTypes, whichGameType, createGame,
-                               gameTypeFromString)
+import GameGenerator exposing (GameType(..))
 import Ai
 
 main =
@@ -34,7 +30,7 @@ main =
 -- MODEL
 
 
-type alias Model = {game: Game}
+type alias Model = { game: Game }
 
 init : (Model, Cmd Msg)
 init =
@@ -52,18 +48,18 @@ update msg {game} =
     case msg of
         MakeMove position ->
             Game.makeMove position game
-                |> modelWithMessage
+                |> updateWithGame
 
         NewGame boardSize gameType ->
             GameGenerator.createGame boardSize gameType
-                |> modelWithMessage
+                |> updateWithGame
 
-modelWithMessage : Game -> (Model, Cmd Msg)
-modelWithMessage newGame =
-   case (Game.whoseTurn newGame) of
-       Just (Human _) -> ({game = newGame}, Cmd.none)
-       Just (Computer _) -> ({game = newGame}, (computerMove newGame))
-       Nothing -> ({game = newGame}, Cmd.none)
+updateWithGame : Game -> (Model, Cmd Msg)
+updateWithGame game =
+    case (Game.whoseTurn game) of
+        Just (Human _)    -> ({game = game}, Cmd.none)
+        Just (Computer _) -> ({game = game}, (computerMove game))
+        Nothing           -> ({game = game}, Cmd.none)
 
 computerMove : Game -> Cmd Msg
 computerMove game =
@@ -86,27 +82,23 @@ view : Model -> Html Msg
 view {game} =
     let
         board = Game.getBoard game
+        size = Board.size board
         status = Game.status game
         whoseTurn = Game.whoseTurn game
+        gameType = GameGenerator.whichGameType (Game.getPlayers game)
     in
         div [class "main-container"]
-            [ renderGameSelection game
+            [ renderNewGameSelection size gameType status
             , renderBoard status whoseTurn board
             , renderWhoseTurn whoseTurn
             , renderGameOutcome status
             ]
 
-renderGameSelection : Game -> Html Msg
-renderGameSelection game =
-    let
-        board = Game.getBoard game
-        size = Board.size board
-        status = Game.status game
-        gameType = GameGenerator.whichGameType (Game.getPlayers game)
-    in
-        div [class "new-game-container"]
-            [ div [] [ renderSelectNewGame size gameType
-                     , renderSelectNewBoard size gameType
-                     ]
-            , renderResetButton size gameType status
-            ]
+renderNewGameSelection : Size -> GameType -> Status -> Html Msg
+renderNewGameSelection size gameType status =
+    div [class "new-game-container"]
+        [ div [] [ renderSelectNewGame size gameType
+                 , renderSelectNewBoard size gameType
+                 ]
+        , renderResetButton size gameType status
+        ]
