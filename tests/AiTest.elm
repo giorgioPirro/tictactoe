@@ -5,7 +5,7 @@ import Expect
 
 import Ai exposing (pickBestPosition)
 import Board exposing (Mark(..), Size(..))
-import Game exposing (Player(..))
+import Player exposing (Player(..))
 import Helpers exposing (createNewGame, createGameXCanWin, createGameOCanAvoidLoss,
                          createGameXCanBlockFork, createGameOCanBlockFork)
 

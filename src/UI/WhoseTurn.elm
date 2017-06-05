@@ -5,7 +5,7 @@ import Html.Attributes exposing (class, id)
 
 import Msg exposing (Msg(..))
 import Board exposing (Mark(..))
-import Game exposing (Player)
+import Player exposing (Player)
 
 renderWhoseTurn : Maybe Player -> Html Msg
 renderWhoseTurn player =
@@ -16,7 +16,7 @@ renderWhoseTurn player =
                 , div [id "turn-noughts", class "turn-display"] []
                 ]
         Just player ->
-            div [class "turn-container"] (buildTurnBoxes (Game.extractMark player))
+            div [class "turn-container"] (buildTurnBoxes (Player.extractMark player))
 
 buildTurnBoxes : Mark -> List (Html Msg)
 buildTurnBoxes mark =

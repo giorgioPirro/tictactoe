@@ -6,7 +6,8 @@ import Array
 
 import Helpers exposing (createNewGame, createTieGameStandardSizedBoard,
                          createXwinGameStandardSizedBoard, createOwinGameStandardSizedBoard)
-import Game exposing (Player(..), Status(..))
+import Game exposing (Status(..))
+import Player exposing (Player(..))
 import Board exposing (Size(..), Mark(..))
 
 gameTests : Test

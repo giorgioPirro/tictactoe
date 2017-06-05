@@ -12,7 +12,8 @@ import Helpers exposing (standardBoardXwinsHorizontally, randomGameStatus,
                          randomGameOverStatus)
 
 import Board exposing (Size(..), Mark(..))
-import Game exposing (Status(..), Player(..))
+import Game exposing (Status(..))
+import Player exposing (Player(..))
 import Msg exposing (Msg(..))
 import UI.Board exposing (renderBoard)
 

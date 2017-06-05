@@ -1,12 +1,11 @@
-module Game exposing(Player(..), Game, Status(..), create, whoseTurn, gameIsOver,
-                     makeMove, getBoard, getPlayers, status, positionsAvailable,
-                     extractMark)
+module Game exposing(Game, Status(..), create, whoseTurn, gameIsOver,
+                     makeMove, getBoard, getPlayers, status, positionsAvailable)
 
 import Maybe
 
 import Board exposing(Mark(..), Board, Position, Move)
+import Player exposing(Player(..), extractMark)
 
-type Player = Human Mark | Computer Mark
 type alias Game = {board: Board, players: (Player, Player)}
 type Status = Ongoing | Tie | Win Mark
 
@@ -58,13 +57,6 @@ swapPlayers (playerOne, playerTwo) =
 currentPlayersMark : (Player, Player) -> Mark
 currentPlayersMark (currentPlayer, _) =
     extractMark currentPlayer
-
-extractMark : Player -> Mark
-extractMark player =
-    case player of
-        Human mark -> mark
-        Computer mark -> mark
-
 
 getBoard : Game -> Board
 getBoard {board} =

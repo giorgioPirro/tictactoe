@@ -6,7 +6,7 @@ import Test.Html.Query as Query
 import Test.Html.Selector exposing (class, id)
 
 import UI.WhoseTurn exposing (renderWhoseTurn)
-import Game exposing (Player(..))
+import Player exposing (Player(..))
 import Board exposing (Mark(..))
 
 whoseTurnTests : Test

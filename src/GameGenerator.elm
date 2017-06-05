@@ -1,7 +1,8 @@
 module GameGenerator exposing (GameType(..), gameTypes, whichGameType, createGame,
                                gameTypeFromString)
 
-import Game exposing (Game, Player(..))
+import Game exposing (Game)
+import Player exposing (Player(..))
 import Board exposing (Board, Size(..), Mark(..))
 
 type GameType

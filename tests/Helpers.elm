@@ -13,7 +13,8 @@ import Fuzz
 import Shrink
 
 import Board exposing (Size(..), Mark(..), Board)
-import Game exposing (Game, Player(..), Status(..))
+import Game exposing (Game, Status(..))
+import Player exposing (Player(..))
 import GameGenerator exposing (GameType(..))
 
 createNewGame : Size -> (Player, Player) -> Game

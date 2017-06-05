@@ -16,7 +16,8 @@ import UI.SelectNewGame exposing (renderSelectNewGame, renderSelectNewBoard)
 import UI.WhoseTurn exposing (renderWhoseTurn)
 import Board exposing (Board, Mark(..), Size(..), Position, Cell, size, sizesAvailable,
                        sizeFromString)
-import Game exposing (Status(..), Player(..), Game)
+import Game exposing (Status(..), Game)
+import Player exposing (Player(..))
 import GameGenerator exposing (GameType(..), gameTypes, whichGameType, createGame,
                                gameTypeFromString)
 import Ai

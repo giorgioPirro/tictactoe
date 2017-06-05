@@ -11,7 +11,7 @@ import Helpers exposing (randomGameType, randomBoardSize)
 import Msg exposing (Msg(..))
 import UI.SelectNewGame exposing (renderSelectNewBoard)
 import Board exposing (Mark(..), Size(..))
-import Game exposing (Player(..))
+import Player exposing (Player(..))
 import GameGenerator exposing (GameType(..))
 
 selectBoardTests : Test

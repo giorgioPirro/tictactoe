@@ -5,7 +5,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
 import Msg exposing (Msg(..))
-import Game exposing (Status(..), Player(..))
+import Game exposing (Status(..))
+import Player exposing (Player(..))
 import Board exposing (Board, Position, Cell, Mark(..))
 
 renderBoard : Status -> Maybe Player -> Board -> Html Msg

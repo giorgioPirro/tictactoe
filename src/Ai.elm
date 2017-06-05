@@ -2,6 +2,7 @@ module Ai exposing(pickBestPosition)
 
 import Board exposing (Position, Mark(..))
 import Game exposing (Game, Status(..))
+import Player
 import Utilities.List exposing (maximumBy)
 
 type alias Score = Int
@@ -24,7 +25,7 @@ pickBestPosition game =
             Nothing
         Just player ->
             let
-                maximisingMark = Game.extractMark player
+                maximisingMark = Player.extractMark player
                 positionsAvailable = Game.positionsAvailable game
             in
                 maximumBy
@@ -66,7 +67,7 @@ rateOngoingGame game maximisingMark depth alpha beta =
             Nothing ->
                 0
             Just player ->
-                if (Game.extractMark player == maximisingMark) then
+                if (Player.extractMark player == maximisingMark) then
                     findHighestScoringMove
                         -infinity maximisingMark depth alpha beta
                         game positionsAvailable

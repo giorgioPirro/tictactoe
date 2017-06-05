@@ -10,7 +10,7 @@ import Helpers exposing (createNewGame)
 import Msg exposing (Msg(..))
 import Main exposing (Model, update)
 import Board exposing (Mark(..), Size(..))
-import Game exposing (Player(..))
+import Player exposing (Player(..))
 
 updateTests : Test
 updateTests =
