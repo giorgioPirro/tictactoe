@@ -11,22 +11,19 @@ type alias Beta = Int
 
 pickBestPosition : Game -> Maybe Position
 pickBestPosition game =
-    if ((List.length (Game.positionsAvailable game)) > 8) then
-        List.head (Game.positionsAvailable game)
-    else
-      case (Game.whoseTurn game) of
-          Nothing ->
-              Nothing
-          Just player ->
-              Game.positionsAvailable game
-                  |> maximumBy (rateMove game (Game.extractMark player) 0 -999999 999999)
+    case (Game.whoseTurn game) of
+        Nothing ->
+            Nothing
+        Just player ->
+            Game.positionsAvailable game
+                |> maximumBy (rateMove game (Game.extractMark player) 0 -999999 999999)
 
 rateMove : Game -> Mark -> Depth -> Alpha -> Beta -> Position -> Score
 rateMove game maximisingMark depth alpha beta position =
     let
         gameAfterMove = Game.makeMove position game
     in
-        if ((Game.gameIsOver (Game.status gameAfterMove)) || (depth > 4)) then
+        if ((Game.gameIsOver (Game.status gameAfterMove)) || (depth > 4) || ((List.length (Game.positionsAvailable game)) > 11) || (((List.length (Game.positionsAvailable game)) > 8) && (depth > 1))) then
             rateGameOutcome gameAfterMove maximisingMark depth
         else
             rateOngoingGame gameAfterMove maximisingMark (depth + 1) alpha beta
