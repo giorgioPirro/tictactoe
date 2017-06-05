@@ -100,11 +100,12 @@ renderGameSelection game =
     let
         board = Game.getBoard game
         size = Board.size board
+        status = Game.status game
         gameType = GameGenerator.whichGameType (Game.getPlayers game)
     in
         div [class "new-game-container"]
             [ div [] [ renderSelectNewGame size gameType
                      , renderSelectNewBoard size gameType
                      ]
-            , renderResetButton game
+            , renderResetButton size gameType status
             ]
