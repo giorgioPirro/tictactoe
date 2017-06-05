@@ -11,7 +11,6 @@ import Utilities.List exposing (removeWhen, findFirstWhere, allItemsAreEqual,
 import Utilities.Maybe exposing (flatMaybe)
 
 type Size = Standard | Large
-
 type Mark  = X | O
 type alias Cell = (Maybe Mark)
 type Board = Board (Array Cell)

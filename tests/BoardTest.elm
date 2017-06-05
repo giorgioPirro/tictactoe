@@ -2,15 +2,10 @@ module BoardTest exposing (boardTests)
 
 import Test exposing (Test, describe, test)
 import Expect
-import Array exposing (get)
+import Array
 
-import Helpers exposing (createDrawBoardStandardSized, standardBoardXwinsHorizontally,
-                         standardBoardOwinsHorizontally, standardBoardXwinsVertically,
-                         standardBoardOwinsVertically, standardBoardXwinsDownDiagonal,
-                         standardBoardOwinsUpDiagonal)
-
+import Helpers
 import Board exposing (Size(..), Mark(..))
-
 
 boardTests : Test
 boardTests =
@@ -21,6 +16,14 @@ boardTests =
                       |> Board.toList
                       |> List.length
                       |> Expect.equal 9
+
+         , test "have a large size of sixteen cells" <|
+              \() ->
+                  Board.create Large
+                      |> Board.toList
+                      |> List.length
+                      |> Expect.equal 16
+
 
         , test "have all cells empty by default" <|
               \() ->
@@ -43,12 +46,12 @@ boardTests =
         , test "add the given mark at the given position (example with O)" <|
               \() ->
                   let
-                      move = (5, O)
+                      move = (15, O)
                   in
-                      Board.create Standard
+                      Board.create Large
                           |> Board.markCell move
                           |> Board.toArray
-                          |> Array.get 5
+                          |> Array.get 15
                           |> Expect.equal (Just (Just O))
 
         , test "provide a list of Cell rows (empty board)" <|
@@ -60,11 +63,11 @@ boardTests =
 
         , test "provide a list of Cell rows (marked board)" <|
               \() ->
-                  Board.create Standard
+                  Board.create Large
                       |> Board.markCell (2, X)
                       |> Board.rows
                       |> List.head
-                      |> Expect.equal (Just ([Nothing, Nothing, (Just X)]))
+                      |> Expect.equal (Just ([Nothing, Nothing, (Just X), Nothing]))
 
         , test "know that a new board is not full" <|
               \() ->
@@ -74,7 +77,7 @@ boardTests =
 
         , test "know when a board is full" <|
               \() ->
-                  createDrawBoardStandardSized
+                  Helpers.createDrawBoardStandardSized
                       |> Board.isFull
                       |> Expect.true "draw board should be full"
 
@@ -99,37 +102,37 @@ boardTests =
 
         , test "find the winning mark when there is one (horizontal X)" <|
               \() ->
-                  standardBoardXwinsHorizontally
+                  Helpers.standardBoardXwinsHorizontally
                       |> Board.winningMark
                       |> Expect.equal (Just X)
 
         , test "find the winning mark when there is one (horizontal O)" <|
               \() ->
-                  standardBoardOwinsHorizontally
+                  Helpers.standardBoardOwinsHorizontally
                       |> Board.winningMark
                       |> Expect.equal (Just O)
 
         , test "find the winning mark when there is one (vertical X)" <|
               \() ->
-                  standardBoardXwinsVertically
+                  Helpers.standardBoardXwinsVertically
                       |> Board.winningMark
                       |> Expect.equal (Just X)
 
         , test "find the winning mark when there is one (vertical O)" <|
               \() ->
-                  standardBoardOwinsVertically
+                  Helpers.standardBoardOwinsVertically
                       |> Board.winningMark
                       |> Expect.equal (Just O)
 
         , test "find the winning mark when there is one (downward diagonal X)" <|
               \() ->
-                  standardBoardXwinsDownDiagonal
+                  Helpers.standardBoardXwinsDownDiagonal
                       |> Board.winningMark
                       |> Expect.equal (Just X)
 
         , test "find the winning mark when there is one (upward diagonal O)" <|
               \() ->
-                  standardBoardOwinsUpDiagonal
+                  Helpers.standardBoardOwinsUpDiagonal
                       |> Board.winningMark
                       |> Expect.equal (Just O)
         ]
