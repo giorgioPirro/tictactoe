@@ -4,5 +4,5 @@ import Board exposing (Position, Size)
 import GameGenerator exposing (GameType)
 
 type Msg
-  = MakeMove Position
-  | NewGame Size GameType
+    = MakeMove Position
+    | NewGame Size GameType

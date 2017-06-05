@@ -3,7 +3,7 @@ module GameGenerator exposing (GameType(..), gameTypes, whichGameType, createGam
 
 import Game exposing (Game)
 import Player exposing (Player(..))
-import Board exposing (Board, Size(..), Mark(..))
+import Board exposing (Size(..), Mark(..))
 
 type GameType
   = HumanVsHuman
