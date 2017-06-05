@@ -3,7 +3,7 @@ module UI.GameOutcome exposing (renderGameOutcome)
 import Html exposing (Html, div, p, text)
 import Html.Attributes exposing (class)
 
-import Msg exposing (Msg(..))
+import Msg exposing (Msg)
 import Game exposing (Status(..))
 
 renderGameOutcome : Status -> Html Msg
