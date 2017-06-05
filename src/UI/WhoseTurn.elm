@@ -3,7 +3,7 @@ module UI.WhoseTurn exposing (renderWhoseTurn)
 import Html exposing (Html, div)
 import Html.Attributes exposing (class, id)
 
-import Msg exposing (Msg(..))
+import Msg exposing (Msg)
 import Board exposing (Mark(..))
 import Player exposing (Player)
 
