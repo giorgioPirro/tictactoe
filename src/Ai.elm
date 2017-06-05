@@ -9,41 +9,74 @@ type alias Depth = Int
 type alias Alpha = Int
 type alias Beta = Int
 
+infinity : Int
+infinity =
+    round (1/0)
+
+initialDepth : Int
+initialDepth =
+    0
+
 pickBestPosition : Game -> Maybe Position
 pickBestPosition game =
     case (Game.whoseTurn game) of
         Nothing ->
             Nothing
         Just player ->
-            Game.positionsAvailable game
-                |> maximumBy (rateMove game (Game.extractMark player) 0 -999999 999999)
+            let
+                maximisingMark = Game.extractMark player
+                positionsAvailable = Game.positionsAvailable game
+            in
+                maximumBy
+                    (rateMove game maximisingMark initialDepth -infinity infinity)
+                    positionsAvailable
 
 rateMove : Game -> Mark -> Depth -> Alpha -> Beta -> Position -> Score
 rateMove game maximisingMark depth alpha beta position =
     let
         gameAfterMove = Game.makeMove position game
     in
-        if ((Game.gameIsOver (Game.status gameAfterMove)) || (depth > 4) || ((List.length (Game.positionsAvailable game)) > 11) || (((List.length (Game.positionsAvailable game)) > 8) && (depth > 1))) then
+        if (shouldStopEvaluating gameAfterMove depth) then
             rateGameOutcome gameAfterMove maximisingMark depth
         else
             rateOngoingGame gameAfterMove maximisingMark (depth + 1) alpha beta
+
+shouldStopEvaluating : Game -> Depth -> Bool
+shouldStopEvaluating game depth =
+    (isGameOver game) ||
+    (depth > 4)       ||
+    (moreThanNmovesToEvaluate 11 game) ||
+    ((moreThanNmovesToEvaluate 7 game) && (depth > 1))
+
+isGameOver : Game -> Bool
+isGameOver game =
+    (Game.gameIsOver (Game.status game))
+
+moreThanNmovesToEvaluate : Int -> Game -> Bool
+moreThanNmovesToEvaluate moves game =
+    (List.length (Game.positionsAvailable game)) > moves
 
 rateOngoingGame : Game -> Mark -> Depth -> Alpha -> Beta -> Score
 rateOngoingGame game maximisingMark depth alpha beta =
     let
         currentPlayer = Game.whoseTurn game
+        positionsAvailable = Game.positionsAvailable game
     in
         case currentPlayer of
             Nothing ->
                 0
             Just player ->
                 if (Game.extractMark player == maximisingMark) then
-                    alphaBetaMaxReduce (rateMove game maximisingMark depth alpha beta) -999999 maximisingMark depth alpha beta (Game.positionsAvailable game) game
+                    findHighestScoringMove
+                        -infinity maximisingMark depth alpha beta
+                        game positionsAvailable
                 else
-                    alphaBetaMinReduce (rateMove game maximisingMark depth alpha beta) 999999 maximisingMark depth alpha beta (Game.positionsAvailable game) game
+                    findLowestScoringMove
+                        infinity maximisingMark depth alpha beta
+                         game positionsAvailable
 
-alphaBetaMaxReduce : (Position -> Score) -> Score -> Mark -> Depth -> Alpha -> Beta -> List Position -> Game -> Score
-alphaBetaMaxReduce f bestScoreSoFar maximisingMark depth alpha beta positionsAvailable game =
+findHighestScoringMove : Score -> Mark -> Depth -> Alpha -> Beta -> Game -> List Position -> Score
+findHighestScoringMove bestScoreSoFar maximisingMark depth alpha beta game positionsAvailable =
     case positionsAvailable of
         [] ->
             bestScoreSoFar
@@ -51,10 +84,12 @@ alphaBetaMaxReduce f bestScoreSoFar maximisingMark depth alpha beta positionsAva
             if (beta <= alpha) then
                 bestScoreSoFar
             else
-                alphaBetaMaxReduce f (max bestScoreSoFar (rateMove game maximisingMark depth alpha beta position)) maximisingMark depth (max bestScoreSoFar alpha) beta otherPositions game
+                findHighestScoringMove
+                    (max bestScoreSoFar (rateMove game maximisingMark depth alpha beta position))
+                    maximisingMark depth (max bestScoreSoFar alpha) beta game otherPositions
 
-alphaBetaMinReduce : (Position -> Score) -> Score -> Mark -> Depth -> Alpha -> Beta -> List Position -> Game -> Score
-alphaBetaMinReduce f bestScoreSoFar maximisingMark depth alpha beta positionsAvailable game =
+findLowestScoringMove : Score -> Mark -> Depth -> Alpha -> Beta -> Game -> List Position -> Score
+findLowestScoringMove bestScoreSoFar maximisingMark depth alpha beta game positionsAvailable =
     case positionsAvailable of
         [] ->
             bestScoreSoFar
@@ -62,7 +97,9 @@ alphaBetaMinReduce f bestScoreSoFar maximisingMark depth alpha beta positionsAva
             if (beta <= alpha) then
                 bestScoreSoFar
             else
-                alphaBetaMinReduce f (min bestScoreSoFar (rateMove game maximisingMark depth alpha beta position)) maximisingMark depth alpha (min bestScoreSoFar beta) otherPositions game
+                findLowestScoringMove
+                    (min bestScoreSoFar (rateMove game maximisingMark depth alpha beta position))
+                    maximisingMark depth alpha (min bestScoreSoFar beta) game otherPositions
 
 rateGameOutcome : Game -> Mark -> Depth -> Score
 rateGameOutcome game maximisingMark depth =
@@ -74,15 +111,3 @@ rateGameOutcome game maximisingMark depth =
                 depth - 100
         _ ->
             0
-
-getMaximumOrZero : List Int -> Score
-getMaximumOrZero list =
-    case List.maximum list of
-        Just max -> max
-        Nothing -> 0
-
-getMinimumOrZero : List Int -> Score
-getMinimumOrZero list =
-    case List.minimum list of
-        Just min -> min
-        Nothing -> 0
