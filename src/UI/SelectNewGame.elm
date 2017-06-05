@@ -11,25 +11,25 @@ import GameGenerator exposing (GameType, gameTypeFromString, gameTypes)
 renderSelectNewBoard : Size -> GameType -> Html Msg
 renderSelectNewBoard currentBoardSize currentGameType =
     sizesAvailable
-        |> List.map (\aBoardSize -> (buildOption currentBoardSize aBoardSize))
-        |> select [onInput (fooCHANGEMYNAMECHANGEMYNAMEPLEASE currentGameType)]
-
-fooCHANGEMYNAMECHANGEMYNAMEPLEASE : GameType -> String -> Msg
-fooCHANGEMYNAMECHANGEMYNAMEPLEASE currentGameType boardSizeAsString =
-    NewGame (sizeFromString boardSizeAsString) currentGameType
+        |> List.map (\aBoardSize -> (generateOptions currentBoardSize aBoardSize))
+        |> select [onInput (generateNewGameFromGivenType currentGameType)]
 
 renderSelectNewGame : Size -> GameType -> Html Msg
 renderSelectNewGame boardSize currentGameType =
     gameTypes
-        |> List.map (\aGameType -> (buildOption currentGameType aGameType))
-        |> select [onInput (generateNewGameMsg boardSize)]
+        |> List.map (\aGameType -> (generateOptions currentGameType aGameType))
+        |> select [onInput (generateNewGameFromGivenSize boardSize)]
 
-generateNewGameMsg : Size -> String -> Msg
-generateNewGameMsg boardSize gameTypeAsString =
+generateNewGameFromGivenType : GameType -> String -> Msg
+generateNewGameFromGivenType currentGameType boardSizeAsString =
+    NewGame (sizeFromString boardSizeAsString) currentGameType
+
+generateNewGameFromGivenSize : Size -> String -> Msg
+generateNewGameFromGivenSize boardSize gameTypeAsString =
     NewGame boardSize (gameTypeFromString gameTypeAsString)
 
-buildOption : a -> a -> Html Msg
-buildOption optionToSelect currentOption =
+generateOptions : a -> a -> Html Msg
+generateOptions optionToSelect currentOption =
     let
         typeAsString = toString currentOption
     in
