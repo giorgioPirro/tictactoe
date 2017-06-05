@@ -4,14 +4,21 @@ module Game exposing(Game, Status(..), create, whoseTurn, gameIsOver,
 import Maybe
 
 import Board exposing(Mark(..), Board, Position, Move)
-import Player exposing(Player(..), extractMark)
+import Player exposing(Player(..))
 
-type alias Game = {board: Board, players: (Player, Player)}
-type Status = Ongoing | Tie | Win Mark
+type alias Game =
+    { players: (Player, Player)
+    , board: Board
+    }
+
+type Status
+    = Ongoing
+    | Tie
+    | Win Mark
 
 create : (Player, Player) -> Board -> Game
 create players board =
-    Game board players
+    Game players board
 
 whoseTurn : Game -> Maybe Player
 whoseTurn ({players} as game) =
@@ -38,13 +45,17 @@ isMoveAllowed position ({board} as game) =
     status game == Ongoing
 
 addMoveToGame : Position -> Game -> Game
-addMoveToGame position {board, players} =
+addMoveToGame position ({board, players} as game) =
     let
+        newPlayers = swapPlayers players
         move = (position, (currentPlayersMark players))
         newBoard = addMoveToBoard move board
-        newPlayers = swapPlayers players
     in
-        Game newBoard newPlayers
+        Game newPlayers newBoard
+
+currentPlayersMark : (Player, Player) -> Mark
+currentPlayersMark (currentPlayer, _) =
+    Player.extractMark currentPlayer
 
 addMoveToBoard : Move -> Board -> Board
 addMoveToBoard move board =
@@ -53,10 +64,6 @@ addMoveToBoard move board =
 swapPlayers : (Player, Player) -> (Player, Player)
 swapPlayers (playerOne, playerTwo) =
     (playerTwo, playerOne)
-
-currentPlayersMark : (Player, Player) -> Mark
-currentPlayersMark (currentPlayer, _) =
-    extractMark currentPlayer
 
 getBoard : Game -> Board
 getBoard {board} =
