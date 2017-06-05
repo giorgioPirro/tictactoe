@@ -16,7 +16,7 @@ import GameGenerator exposing (GameType(..))
 
 selectBoardTests : Test
 selectBoardTests =
-    Test.skip <| describe "The UI should render the select board element"
+    describe "The UI should render the select board element"
         [ fuzz2 randomGameType randomBoardSize "displaying the board type that is currently being played" <|
              \aGameType aBoardSize ->
                  renderSelectNewBoard aBoardSize aGameType

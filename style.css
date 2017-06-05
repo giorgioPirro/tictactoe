@@ -35,10 +35,12 @@ select {
 }
 
 button {
+    padding: 0;
     border: 0;
     background-color: transparent;
     font-size: 1.2em;
     color: grey;
+    animation: appear 0.5s;
 }
 
 button:hover, select:hover {
