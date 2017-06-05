@@ -1,17 +1,12 @@
 [ ] - Do I want the board to prevent updating a cell if it is already taken?
 [ ] - Remove all mentions of todo (Test library)
 [ ] - Remove Board.toArray (or maybe think about the mashup of data structures around Board)
-[ ] - Add tests for Utils functions?
 [ ] - Annotate all private (not exposed) functions by prepending _ to their name
-[ ] - Better language for creating boards in helpers (something more graphical)
-[ ] - Separate Board into Board and Main?
-[ ] - Add fuzzy testing where possible/appropriate
-[ ] - Move custom fuzzer for Game status into helper
-[ ] - add favicon
 [ ] - add integration test/s?
-[ ] - deal with reset button (should not be available when game is Ongoing)
 
-
+[ ] - Add tests for Utils functions?
+[ ] - Better language for creating boards in helpers (something more graphical)
+[ ] - add favicon
 
 
 
@@ -20,4 +15,3 @@
 [ ] - use of language and compromises for Board.winningMark
 [ ] - would like to try work on a board that embeds players order to reduce the number of ways in which an invalid state can occur
 [ ] - explain internal representation of the board (performance vs ease of use)
-
