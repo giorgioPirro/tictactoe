@@ -1,12 +1,4 @@
-module Helpers exposing (createNewGame, createTieGameStandardSizedBoard, createGameXCanWin,
-                         createXwinGameStandardSizedBoard, createOwinGameStandardSizedBoard,
-                         createDrawBoardStandardSized, standardBoardXwinsHorizontally,
-                         standardBoardOwinsHorizontally, standardBoardXwinsVertically,
-                         standardBoardOwinsVertically, standardBoardXwinsDownDiagonal,
-                         standardBoardOwinsUpDiagonal, randomGameStatus,
-                         randomGameOverStatus, randomGameType, randomBoardSize,
-                         createGameOCanAvoidLoss, createGameXCanBlockFork,
-                         createGameOCanMakeFork)
+module Helpers exposing (..)
 
 import Random.Pcg
 import Fuzz
@@ -21,116 +13,127 @@ createNewGame : Size -> (Player, Player) -> Game
 createNewGame size players =
     Game.create players (Board.create size)
 
+parseStandardSizedGame : (Player, Player) -> List String -> Game
+parseStandardSizedGame players cellsToParse =
+         Game.create players (parseStandardSizeBoard cellsToParse)
+
+parseStandardSizeBoard : List String -> Board
+parseStandardSizeBoard cellsToParse =
+    let
+        movesToMake = cellsToParse
+            |> List.indexedMap (,)
+            |> List.filter (\(position,cell) -> cell /= "-")
+            |> List.map (\(position, cell) -> case cell of
+                                                  "X" -> (position, X)
+                                                  _   -> (position, O))
+    in
+        addMovesToBoard movesToMake (Board.create Standard)
+
 addMovesToBoard : List (Int, Mark) -> Board -> Board
 addMovesToBoard moves board =
         List.foldl Board.markCell board moves
 
 createGameXCanWin : Game
 createGameXCanWin =
-    let
-        newGame = Game.create (Human X, Human O) (Board.create Standard)
-        moves = [4, 2, 7, 5, 8, 6]
-    in
-        List.foldl Game.makeMove newGame moves
+    parseStandardSizedGame (Computer X, Human O) [ "-", "-", "O"
+                                                 , "X", "X", "O"
+                                                 , "O", "-", "X"
+                                                 ]
 
 createGameOCanAvoidLoss : Game
 createGameOCanAvoidLoss =
-    let
-        newGame = Game.create (Human X, Human O) (Board.create Standard)
-        moves = [2, 0, 4, 1]
-    in
-        List.foldl Game.makeMove newGame moves
+    parseStandardSizedGame (Computer O, Human X) [ "O", "O", "X"
+                                                 , "-", "X", "-"
+                                                 , "-", "-", "-"
+                                                 ]
 
 createGameXCanBlockFork : Game
 createGameXCanBlockFork =
-    let
-        newGame = Game.create (Human O, Human X) (Board.create Standard)
-        moves = [4, 2, 6]
-    in
-        List.foldl Game.makeMove newGame moves
+    parseStandardSizedGame (Computer X, Human O) [ "-", "-", "X"
+                                                 , "-", "O", "-"
+                                                 , "O", "-", "-"
+                                                 ]
 
 createGameOCanMakeFork : Game
 createGameOCanMakeFork =
-    let
-        newGame = Game.create (Human O, Human X) (Board.create Standard)
-        moves = [8, 0, 4]
-    in
-        List.foldl Game.makeMove newGame moves
+    parseStandardSizedGame (Computer O, Human X) [ "X", "-", "-"
+                                                 , "-", "O", "-"
+                                                 , "-", "-", "O"
+                                                 ]
 
-createTieGameStandardSizedBoard : Game
-createTieGameStandardSizedBoard =
-    let
-        newGame = Game.create (Human X, Human O) (Board.create Standard)
-        moves = [1, 0, 4, 2, 5, 3, 6, 7, 8]
-    in
-        List.foldl Game.makeMove newGame moves
+createTieGame : Game
+createTieGame =
+    parseStandardSizedGame (Human X, Human O) [ "O", "X", "O"
+                                              , "O", "X", "X"
+                                              , "X", "O", "X"
+                                              ]
 
-createXwinGameStandardSizedBoard : Game
-createXwinGameStandardSizedBoard =
-    let
-        newGame = Game.create (Human X, Human O) (Board.create Standard)
-        moves = [0, 3, 1, 4, 2]
-    in
-        List.foldl Game.makeMove newGame moves
+createXwinGame : Game
+createXwinGame =
+    parseStandardSizedGame (Human X, Human O) [ "X", "X", "X"
+                                              , "O", "O", "-"
+                                              , "-", "-", "-"
+                                              ]
 
-createOwinGameStandardSizedBoard : Game
-createOwinGameStandardSizedBoard =
-    let
-        newGame = Game.create (Human O, Human X) (Board.create Standard)
-        moves = [0, 3, 4, 5, 8]
-    in
-        List.foldl Game.makeMove newGame moves
+createOwinGame : Game
+createOwinGame =
+    parseStandardSizedGame (Human O, Human X) [ "O", "-", "-"
+                                              , "X", "O", "X"
+                                              , "-", "-", "O"
+                                              ]
+
+
 
 createDrawBoardStandardSized : Board
 createDrawBoardStandardSized =
-    let
-        newBoard = Board.create Standard
-        moves = [(1, X), (0, O), (4, X), (2, O),
-                 (5, X), (3, O), (6, X), (7, O), (8, X)]
-    in
-        List.foldl Board.markCell newBoard moves
+    parseStandardSizeBoard [ "O", "X", "O"
+                           , "O", "X", "X"
+                           , "X", "O", "X"
+                           ]
 
 standardBoardXwinsHorizontally : Board
 standardBoardXwinsHorizontally =
-    let
-        moves = [(0, X), (3, O), (1, X), (4, O), (2, X)]
-    in
-        addMovesToBoard moves (Board.create Standard)
+    parseStandardSizeBoard [ "X", "X", "X"
+                           , "O", "O", "-"
+                           , "-", "-", "-"
+                           ]
 
 standardBoardOwinsHorizontally : Board
 standardBoardOwinsHorizontally =
-    let
-        moves = [(6, O), (0, X), (7, O), (1, X), (8, O)]
-    in
-        addMovesToBoard moves (Board.create Standard)
+    parseStandardSizeBoard [ "X", "X", "-"
+                           , "-", "-", "-"
+                           , "O", "O", "O"
+                           ]
 
 standardBoardXwinsVertically : Board
 standardBoardXwinsVertically =
-    let
-        moves = [(0, X), (1, O), (3, X), (2, O), (6, X)]
-    in
-        addMovesToBoard moves (Board.create Standard)
+    parseStandardSizeBoard [ "X", "O", "O"
+                           , "X", "-", "-"
+                           , "X", "-", "-"
+                           ]
 
 standardBoardOwinsVertically : Board
 standardBoardOwinsVertically =
-    let
-        moves = [(1, O), (0, X), (4, O), (3, X), (7, O)]
-    in
-        addMovesToBoard moves (Board.create Standard)
+    parseStandardSizeBoard [ "X", "O", "-"
+                           , "X", "O", "-"
+                           , "-", "O", "-"
+                           ]
 
 standardBoardXwinsDownDiagonal : Board
 standardBoardXwinsDownDiagonal =
-    let
-        moves = [(0, X), (1, O), (4, X), (5, O), (8, X)]
-    in
-        addMovesToBoard moves (Board.create Standard)
+    parseStandardSizeBoard [ "X", "O", "-"
+                           , "-", "X", "O"
+                           , "-", "-", "X"
+                           ]
 
 standardBoardOwinsUpDiagonal : Board
 standardBoardOwinsUpDiagonal =
-    let
-        moves = [(6, O), (0, X), (4, O), (5, X), (2, O), (8, X)]
-    in
-        addMovesToBoard moves (Board.create Standard)
+    parseStandardSizeBoard [ "X", "-", "O"
+                           , "-", "O", "X"
+                           , "O", "-", "-"
+                           ]
+
+
 
 randomGameStatus : Fuzz.Fuzzer Status
 randomGameStatus =

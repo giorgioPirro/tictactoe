@@ -42,7 +42,7 @@ gameTests =
 
         , test "know that it is not anyone's turn when a game is over" <|
               \() ->
-                  Helpers.createTieGameStandardSizedBoard
+                  Helpers.createTieGame
                       |> Game.whoseTurn
                       |> Expect.equal Nothing
 
@@ -82,27 +82,27 @@ gameTests =
 
         , test "know when a game is tied" <|
               \() ->
-                  Helpers.createTieGameStandardSizedBoard
+                  Helpers.createTieGame
                       |> Game.status
                       |> Expect.equal Tie
 
         , test "know when X has won" <|
               \() ->
-                  Helpers.createXwinGameStandardSizedBoard
+                  Helpers.createXwinGame
                       |> Game.status
                       |> Expect.equal (Win X)
 
         , test "know when O has won" <|
               \() ->
-                  Helpers.createOwinGameStandardSizedBoard
+                  Helpers.createOwinGame
                       |> Game.status
                       |> Expect.equal (Win O)
 
         , test "not update the game state if a move is made when the game is over" <|
               \() ->
-                  Helpers.createOwinGameStandardSizedBoard
+                  Helpers.createOwinGame
                       |> Game.makeMove 7
-                      |> Expect.equal Helpers.createOwinGameStandardSizedBoard
+                      |> Expect.equal Helpers.createOwinGame
 
         , test "provide all positions available (all cells at the beginning)" <|
               \() ->
@@ -119,7 +119,7 @@ gameTests =
 
         , test "provide no positions available when the game is over (board still has empty cells)" <|
               \() ->
-                  Helpers.createOwinGameStandardSizedBoard
+                  Helpers.createOwinGame
                       |> Game.positionsAvailable
                       |> Expect.equal []
         ]
