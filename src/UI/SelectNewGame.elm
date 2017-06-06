@@ -14,7 +14,7 @@ renderSelectNewBoard currentBoardSize currentGameType =
         HumanVsHuman ->
             sizesAvailable
                 |> List.map (\aBoardSize -> (generateOptions currentBoardSize aBoardSize))
-                |> select [onInput (generateNewGameFromGivenType currentGameType)]
+                |> select [onInput (generateNewGameFromGivenTypeAndSize currentGameType)]
         _ ->
             div [] []
 
@@ -22,14 +22,14 @@ renderSelectNewGame : Size -> GameType -> Html Msg
 renderSelectNewGame boardSize currentGameType =
     gameTypes
         |> List.map (\aGameType -> (generateOptions currentGameType aGameType))
-        |> select [onInput generateNewGame]
+        |> select [onInput generateNewGameFromGivenType]
 
-generateNewGameFromGivenType : GameType -> String -> Msg
-generateNewGameFromGivenType currentGameType boardSizeAsString =
+generateNewGameFromGivenTypeAndSize : GameType -> String -> Msg
+generateNewGameFromGivenTypeAndSize currentGameType boardSizeAsString =
     NewGame (sizeFromString boardSizeAsString) currentGameType
 
-generateNewGame : String -> Msg
-generateNewGame gameTypeAsString =
+generateNewGameFromGivenType : String -> Msg
+generateNewGameFromGivenType gameTypeAsString =
     NewGame Standard (gameTypeFromString gameTypeAsString)
 
 generateOptions : a -> a -> Html Msg
