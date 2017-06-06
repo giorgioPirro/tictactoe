@@ -30,7 +30,7 @@ renderRow status currentPlayer row =
 
 renderCell : Status -> Maybe Player -> IndexedCell -> Html Msg
 renderCell status currentPlayer indexedCell =
-        td (buildCellAttributes status currentPlayer indexedCell) []
+    td (buildCellAttributes status currentPlayer indexedCell) []
 
 buildCellAttributes : Status -> Maybe Player -> IndexedCell -> List (Attribute Msg)
 buildCellAttributes status currentPlayer (position, cell) =
