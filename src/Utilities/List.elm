@@ -44,26 +44,31 @@ doTranspose accumulator remainingLines =
                 (getAllTails linesLeft)
 
 getAllHeads : List (List a) -> List (List a)
-getAllHeads blah =
-    [(List.filterMap List.head blah)]
+getAllHeads lists =
+    [(List.filterMap List.head lists)]
 
 getAllTails : List (List a) -> List (List a)
-getAllTails blah =
-    (List.filterMap List.tail blah)
+getAllTails lists =
+    (List.filterMap List.tail lists)
 
 getAt : List a -> Int -> Maybe a
-getAt xs idx = List.head <| List.drop idx xs
+getAt items index =
+    List.drop index items
+        |>List.head
 
 chunkify : Int -> List a -> List (List a)
 chunkify chunkSize list =
     case (List.take chunkSize list) of
-        [] -> []
-        chunk -> chunk :: (chunkify chunkSize (List.drop chunkSize list))
+        [] ->
+            []
+        chunk ->
+            chunk :: (chunkify chunkSize (List.drop chunkSize list))
 
 maximumBy : (a -> comparable) -> List a -> Maybe a
 maximumBy f list =
     let
-        maxValue = List.map f list
-        gigi = List.maximum maxValue
+         maxValue =
+             List.map f list
+                 |> List.maximum
     in
-        findFirstWhere (\item -> (Just (f item)) == gigi) list
+        findFirstWhere (\item -> (Just (f item)) == maxValue) list
