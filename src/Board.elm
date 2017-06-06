@@ -29,8 +29,8 @@ create size =
         Large -> Board (Array.repeat 16 Nothing)
 
 markCell : Move -> Board -> Board
-markCell (position, cell) (Board cells) =
-    Array.set position (Just cell) cells
+markCell (position, mark) (Board cells) =
+    Array.set position (Just mark) cells
         |> Board
 
 isFull : Board -> Bool
