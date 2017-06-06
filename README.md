@@ -14,6 +14,6 @@ Or build it locally following these instructions:
 To run the tests:
 
 - install Node.js. You can download it from [here](https://nodejs.org/en/). Node includes npm, which is also required.
-- install elm-test in your machine: `npm install -g elm-test`
+- install elm-test in your machine: `npm install -g elm-test` (you might have to prepend `sudo` to this one)
 - move to the root of this repository
 - run the tests: `elm-test`or `elm-test --watch` for continuous testing
