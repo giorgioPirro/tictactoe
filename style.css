@@ -11,6 +11,19 @@ body {
     font-family: sans-serif;
 }
 
+.main-container {
+    background-color: #f2f2f2;
+    width: 800px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px #888888;
+}
+
+.board-container {
+    background-color: #e16938;
+    display: flex;
+    justify-content: center;
+}
+
 table {
 		margin: 30px;
     border-collapse: collapse;
@@ -21,25 +34,52 @@ table {
 
 table td {
     border: 10px solid #c25a30;
-		border-radius: 5px;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    background-size: cover;
+    background-color: transparent;
+}
+
+.cell.crosses {
+    background-image:url("public/cross.png");
+    background-position: 0px 0px;
+    background-repeat: space;
+    animation: appear 0.5s;
+}
+
+.cell.noughts {
+    background-image:url("public/nought.png");
+    background-position: 0px 0px;
+    background-repeat: space;
+    animation: appear 0.5s;
+}
+
+.new-game-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+		padding: 40px;
+}
+
+button, select {
+    border: 0;
+    background-color: transparent;
+    font-size: 1.2em;
+    color: grey;
 }
 
 select {
     text-align: center;
-    border: 0;
     -webkit-appearance: none;
-    background-color: transparent;
-    font-size: 1.2em;
-    color: grey;
 		margin: 0px 10px;
 }
 
 button {
     padding: 0;
-    border: 0;
-    background-color: transparent;
-    font-size: 1.2em;
-    color: grey;
+    margin: 0;
     animation: appear 0.5s;
 }
 
@@ -52,58 +92,9 @@ button:focus, select:focus {
     outline: none;
 }
 
-.main-container {
-    background-color: #f2f2f2;
-    width: 800px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px #888888;
-}
-
-.new-game-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-		padding: 40px;
-}
-
-.board-container {
-    background-color: #e16938;
-    display: flex;
-    justify-content: center;
-}
-
 .turn-container {
     display: flex;
     justify-content: space-around;
-}
-
-.cell {
-    width: 30px;
-    height: 30px;
-    background-size: cover;
-}
-
-.cell.empty {
-    background-color: transparent;
-}
-
-.cell.crosses {
-    background-color: transparent;
-    background-repeat: repeat-x;
-    background-image:url("https://cdn.pixabay.com/photo/2014/09/26/10/45/delete-462216_640.png");
-
-    background-position: 0px 0px;
-    background-repeat: space;
-    animation: appear 0.5s;
-}
-
-.cell.noughts {
-    background-color: transparent;
-    background-image:url("http://www.emoji.co.uk/files/microsoft-emojis/symbols-windows10/10295-medium-white-circle.png");
-
-    background-position: 0px 0px;
-    background-repeat: space;
-    animation: appear 0.5s;
 }
 
 .turn-display {
@@ -135,9 +126,9 @@ button:focus, select:focus {
 }
 
 #turn-crosses {
-    background-image:url("https://cdn.pixabay.com/photo/2014/09/26/10/45/delete-462216_640.png");
+    background-image:url("public/cross.png");
 }
 
 #turn-noughts {
-    background-image:url("http://www.emoji.co.uk/files/microsoft-emojis/symbols-windows10/10295-medium-white-circle.png");
+    background-image:url("public/nought.png");
 }
