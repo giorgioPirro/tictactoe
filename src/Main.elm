@@ -72,7 +72,7 @@ getMoveFromAi game =
         Nothing ->
             MakeMove 0
         Just position ->
-           MakeMove position
+            MakeMove position
 
 
 -- VIEW
@@ -97,8 +97,10 @@ view {game} =
 renderNewGameSelection : Size -> GameType -> Status -> Html Msg
 renderNewGameSelection size gameType status =
     div [class "new-game-container"]
-        [ div [] [ renderSelectNewGame size gameType
-                 , renderSelectNewBoard size gameType
-                 ]
+        [ div
+           []
+           [ renderSelectNewGame size gameType
+           , renderSelectNewBoard size gameType
+           ]
         , renderResetButton size gameType status
         ]
