@@ -24,10 +24,10 @@ selectGameTests =
                      |> Query.find [attribute "value" (toString aGameType)]
                      |> Query.has [selected True]
 
-        , fuzz2 randomGameType randomBoardSize "including 'newGame' events for each game type and board size" <|
+        , fuzz2 randomGameType randomBoardSize "including 'newGame' events for each game type and board size set to Standard" <|
              \aGameType aBoardSize->
                  renderSelectNewGame aBoardSize aGameType
                      |> Query.fromHtml
                      |> Event.simulate (Event.input (toString aGameType))
-                     |> Event.expect (NewGame aBoardSize aGameType)
+                     |> Event.expect (NewGame Standard aGameType)
         ]
