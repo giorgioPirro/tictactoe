@@ -61,6 +61,13 @@ createGameOCanMakeFork =
                                                  , "-", "-", "O"
                                                  ]
 
+createGameXCanBlockOutsideFork : Game
+createGameXCanBlockOutsideFork =
+    parseStandardSizedGame (Computer X, Human O) [ "O", "-", "-"
+                                                 , "-", "X", "-"
+                                                 , "-", "-", "O"
+                                                 ]
+
 createTieGame : Game
 createTieGame =
     parseStandardSizedGame (Human X, Human O) [ "O", "X", "O"
