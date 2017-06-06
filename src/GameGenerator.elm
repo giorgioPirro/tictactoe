@@ -6,9 +6,9 @@ import Player exposing (Player(..))
 import Board exposing (Size(..), Mark(..))
 
 type GameType
-  = HumanVsHuman
-  | HumanVsComputer
-  | ComputerVsComputer
+    = HumanVsHuman
+    | HumanVsComputer
+    | ComputerVsComputer
 
 gameTypes : List GameType
 gameTypes =
