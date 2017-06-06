@@ -6,7 +6,7 @@ module Helpers exposing (createNewGame, createTieGameStandardSizedBoard, createG
                          standardBoardOwinsUpDiagonal, randomGameStatus,
                          randomGameOverStatus, randomGameType, randomBoardSize,
                          createGameOCanAvoidLoss, createGameXCanBlockFork,
-                         createGameOCanBlockFork)
+                         createGameOCanMakeFork)
 
 import Random.Pcg
 import Fuzz
@@ -29,7 +29,7 @@ createGameXCanWin : Game
 createGameXCanWin =
     let
         newGame = Game.create (Human X, Human O) (Board.create Standard)
-        moves = [0, 3, 1, 4]
+        moves = [4, 2, 7, 5, 8, 6]
     in
         List.foldl Game.makeMove newGame moves
 
@@ -37,7 +37,7 @@ createGameOCanAvoidLoss : Game
 createGameOCanAvoidLoss =
     let
         newGame = Game.create (Human X, Human O) (Board.create Standard)
-        moves = [0, 3, 1]
+        moves = [2, 0, 4, 1]
     in
         List.foldl Game.makeMove newGame moves
 
@@ -49,11 +49,11 @@ createGameXCanBlockFork =
     in
         List.foldl Game.makeMove newGame moves
 
-createGameOCanBlockFork : Game
-createGameOCanBlockFork =
+createGameOCanMakeFork : Game
+createGameOCanMakeFork =
     let
-        newGame = Game.create (Human X, Human O) (Board.create Standard)
-        moves = [8, 4, 0]
+        newGame = Game.create (Human O, Human X) (Board.create Standard)
+        moves = [8, 0, 4]
     in
         List.foldl Game.makeMove newGame moves
 
