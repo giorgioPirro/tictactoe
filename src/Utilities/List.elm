@@ -23,8 +23,8 @@ allItemsAreEqual items =
          first::rest ->
             case (List.head rest) of
                 Nothing -> False
-                Just item ->
-                   if (first == item) then (allItemsAreEqual rest)
+                Just second ->
+                   if (first == second) then (allItemsAreEqual rest)
                    else False
 
 transpose : List (List a) -> List (List a)
@@ -67,8 +67,8 @@ chunkify chunkSize list =
 maximumBy : (a -> comparable) -> List a -> Maybe a
 maximumBy f list =
     let
-         maxValue =
-             List.map f list
-                 |> List.maximum
+        maxValue =
+            List.map f list
+                |> List.maximum
     in
         findFirstWhere (\item -> (Just (f item)) == maxValue) list
