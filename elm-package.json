@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
-    "summary": "Example Project",
-    "repository": "https://github.com/user/project.git",
+    "summary": "Tic Tac Toe",
+    "repository": "https://github.com/giorgioPirro/tictactoe.git",
     "license": "BSD-3-Clause",
     "source-directories": [
         "src"
