@@ -48,4 +48,3 @@ gameTypeFromString typeDescription =
             HumanVsComputer
         _ ->
             ComputerVsComputer
-
