@@ -19,12 +19,12 @@ import GameGenerator exposing (GameType(..))
 import Ai
 
 main =
-  Html.program
-    { init = init
-    , view = view
-    , update = update
-    , subscriptions = always Sub.none
-    }
+    Html.program
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = always Sub.none
+        }
 
 
 -- MODEL
@@ -48,14 +48,14 @@ update msg {game} =
     case msg of
         MakeMove position ->
             Game.makeMove position game
-                |> updateWithGame
+                |> addCommandToModel
 
         NewGame boardSize gameType ->
             GameGenerator.createGame boardSize gameType
-                |> updateWithGame
+                |> addCommandToModel
 
-updateWithGame : Game -> (Model, Cmd Msg)
-updateWithGame game =
+addCommandToModel : Game -> (Model, Cmd Msg)
+addCommandToModel game =
     case (Game.whoseTurn game) of
         Just (Human _)    -> ({game = game}, Cmd.none)
         Just (Computer _) -> ({game = game}, (computerMove game))
@@ -63,8 +63,8 @@ updateWithGame game =
 
 computerMove : Game -> Cmd Msg
 computerMove game =
-        Process.sleep (200 * Time.millisecond)
-            |> Task.perform (\() -> getMoveFromAi game)
+    Process.sleep (200 * Time.millisecond)
+        |> Task.perform (\() -> getMoveFromAi game)
 
 getMoveFromAi : Game -> Msg
 getMoveFromAi game =
