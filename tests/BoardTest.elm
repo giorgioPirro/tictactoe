@@ -24,7 +24,6 @@ boardTests =
                       |> List.length
                       |> Expect.equal 16
 
-
         , test "have all cells empty by default" <|
               \() ->
                   Board.create Standard
@@ -32,7 +31,7 @@ boardTests =
                       |> List.all (\cell -> cell == Nothing)
                       |> Expect.true "all cells should be empty to begin with"
 
-        , test "add the given mark at the given position (example with X)" <|
+        , test "add a given mark at the given position (example with X)" <|
               \() ->
                   let
                       move = (7, X)
