@@ -26,7 +26,7 @@ resetTests =
                           |> Event.expect (NewGame aBoardSize aGameType)
 
         , fuzz2 randomBoardSize randomGameType
-              "trigger a 'new game' event when clicked if the game is " <|
+              "not be visible if the game is Ongoing" <|
                   \aBoardSize aGameType ->
                       renderResetButton aBoardSize aGameType Ongoing
                           |> Query.fromHtml
